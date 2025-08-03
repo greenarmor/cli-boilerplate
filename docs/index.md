@@ -61,17 +61,17 @@ html.dark {
 
 <div class="hero">npx @greenarmor/cli-boilerplate</div>
 
-# 🧰 @greenarmor/cli-boilerplate
+#  @greenarmor/cli-boilerplate
 
 Build your own CLI tools with confidence.
 
-## 🚀 Quickstart
+## Quickstart
 
 ```bash
 npx @greenarmor/cli-boilerplate
 ```
 
-## 🛠 Features
+## Features
 
 - Scoped CLI tool with global command
 - Version bump helper with changelog
@@ -80,7 +80,7 @@ npx @greenarmor/cli-boilerplate
 - Semantic release-ready
 - Banner and help menu support
 
-## 📦 Publish
+## Publish
 
 ```bash
 your-cli-bump
@@ -92,4 +92,4 @@ your-cli-bump
 - [npm Package](https://www.npmjs.com/package/@greenarmor/cli-boilerplate)
 
 ---
-Made with ❤️ by greenarmor
+Made with ❤ by greenarmor
