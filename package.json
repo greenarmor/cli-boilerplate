@@ -14,7 +14,7 @@
     "changelog": "node scripts/generate-changelog.js"
   },
   "devDependencies": {
-    "conventional-changelog-cli": "^5.1.0"
+    "conventional-changelog-cli": "^5.0.0"
   },
   "author": "Green <greenarmor@live.com>",
   "license": "MIT",
