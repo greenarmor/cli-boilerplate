@@ -1,13 +1,14 @@
 {
   "name": "@greenarmor/cli-boilerplate",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A powerful Node.js CLI boilerplate with semantic-release, commitlint, husky, and GitHub Actions.",
+  "type": "module",
   "bin": {
+    "@greenarmor/cli-boilerplate": "./scripts/create-cli.js",
     "boiler-cli": "./bin/index.js",
     "boiler-cli-bump": "./scripts/bump-cli.js",
-    "boiler-cli-create": "scripts/create-cli.js"
+    "boiler-cli-create": "./scripts/create-cli.js"
   },
-  "type": "module",
   "scripts": {
     "start": "node ./bin/index.js",
     "changelog": "node scripts/generate-changelog.js"
@@ -28,3 +29,4 @@
     "access": "public"
   }
 }
+
