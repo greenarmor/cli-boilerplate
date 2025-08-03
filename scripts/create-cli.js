@@ -12,7 +12,11 @@ import path from 'path';
 
 const projectName = process.argv[2];
 if (!projectName) {
-  console.error(withEmoji ? 'Please provide a CLI name' : 'Error: Please provide a CLI name': npx @greenarmor / cli - boilerplate create my - cli");
+  console.error(
+    withEmoji
+      ? 'Please provide a CLI name.\nUsage: npx @greenarmor/cli-boilerplate <your-cli-name>'
+      : 'Error: Please provide a CLI name.\nUsage: npx @greenarmor/cli-boilerplate <your-cli-name>'
+  );
   process.exit(1);
 }
 
