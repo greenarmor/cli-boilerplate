@@ -92,4 +92,4 @@ your-cli-bump
 - [npm Package](https://www.npmjs.com/package/@greenarmor/cli-boilerplate)
 
 ---
-Made with ❤️ by Ggeenarmor
+Made with ❤️ by Greenarmor
