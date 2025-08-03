@@ -1,0 +1,99 @@
+#!/usr/bin/env node
+
+import inquirer from 'inquirer';
+import { execSync } from 'child_process';
+import fs from 'fs';
+
+const args = process.argv.slice(2);
+const dryRun = args.includes('--dry-run');
+
+const bumpOptions = ['patch', 'minor', 'major'];
+
+const { type } = await inquirer.prompt([
+  {
+    type: 'list',
+    name: 'type',
+    message: 'Select the version bump type:',
+    choices: bumpOptions
+  }
+]);
+
+console.log(`\nGit Log Preview:\n`);
+try {
+  const log = execSync('git log --oneline -n 5', { encoding: 'utf8' });
+  console.log(log);
+} catch (err) {
+  console.error('Failed to show git log.');
+}
+
+console.log(`\nCHANGELOG Preview:\n`);
+try {
+  const changelog = fs.readFileSync('CHANGELOG.md', 'utf8').split('\n').slice(0, 15).join('\n');
+  console.log(changelog || 'No changelog content yet.');
+} catch (err) {
+  console.warn('No CHANGELOG.md file found.');
+}
+
+console.log(`\nGitHub Release Notes (generated):\n`);
+try {
+  const releaseNotes = execSync('npx conventional-changelog -p angular -u -r 1', { encoding: 'utf8' });
+  console.log(releaseNotes || 'No generated release notes.');
+} catch (err) {
+  console.warn('Failed to generate GitHub release notes.');
+}
+
+if (dryRun) {
+  console.log(`\nDry Run: Skipping actual bump, push, and publish.`);
+  process.exit(0);
+}
+
+const { confirm } = await inquirer.prompt([
+  {
+    type: 'confirm',
+    name: 'confirm',
+    message: `Proceed with ${type} bump?`,
+    default: true
+  }
+]);
+
+if (!confirm) {
+  console.log('Aborted by user.');
+  process.exit(0);
+}
+
+try {
+  execSync(`npm version ${type} -m "chore(release): bump version to %s"`, { stdio: 'inherit' });
+
+  const { pushToGitHub } = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'pushToGitHub',
+      message: 'Push commit and tag to GitHub?',
+      default: true
+    }
+  ]);
+
+  if (pushToGitHub) {
+    execSync('git push && git push --tags', { stdio: 'inherit' });
+    console.log('Git push complete.');
+  }
+
+  const { publishToNpm } = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'publishToNpm',
+      message: 'Publish to npm now?',
+      default: false
+    }
+  ]);
+
+  if (publishToNpm) {
+    execSync('npm publish --access public', { stdio: 'inherit' });
+    console.log('npm publish complete.');
+  }
+
+  console.log('\nVersion bump complete.');
+
+} catch (err) {
+  console.error('Error:', err.message);
+}
