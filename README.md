@@ -102,7 +102,7 @@ npx @greenarmor/cli-boilerplate my-cli
   Add full-stack dev tools: ESLint, Prettier, Husky, Lint-Staged, Jest, ZX, Inquirer, Update Notifier, and CLI polish libraries.
 
 ```bash
-npx @greenarmor/cli-boilerplate create my-cli --with-emoji --full-stack
+npx @greenarmor/cli-boilerplate my-cli --with-emoji --full-stack
 ```
 
 ### Run It
