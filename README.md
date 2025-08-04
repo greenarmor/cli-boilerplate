@@ -74,7 +74,7 @@ This project includes semantic-release support out of the box:
 
 ## Quick Start
 
-To create a new CLI based on this boilerplate:
+To use/create a new CLI based on this boilerplate:
 
 ```bash
 npm install -g @greenarmor/cli-boilerplate
