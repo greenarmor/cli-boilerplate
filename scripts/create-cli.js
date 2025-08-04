@@ -56,8 +56,8 @@ npm link
 ${projectName} --help`);
 
 console.log(`\nDone: Your CLI is ready!\n`);
-console.log(` _______      _____           ______ __________      _____________ `);
-console.log(` |      |       |      ___    |_____|     | |  |     |_____|_____/ `);
-console.log(` |_____ |_______|__           |_____|_______|__|_____|_____|    \_ `);
+console.log(` _______      _____           ______ __________      ____________   `);
+console.log(` |      |       |      ___    |_____|     | |  |     |_____|____/   `);
+console.log(` |_____ |_______|__           |_____|_______|__|_____|_____|   \_   `);
 console.log(`                                                                    `)
 console.log(` Type 'cd ${projectName} && npm link && ${projectName} --help' to get started.\n`);
