@@ -15,3 +15,4 @@ export default function generateComponent(componentName) {
 
   fs.writeFileSync(fullPath, content);
   console.log(`Component created: ${fullPath}`);
+}
