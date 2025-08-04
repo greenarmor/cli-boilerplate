@@ -90,7 +90,7 @@ git config --global user.email "your_email@example.com"
 ### Create Your CLI
 
 ```bash
-npx @greenarmor/cli-boilerplate create my-cli
+npx @greenarmor/cli-boilerplate my-cli
 ```
 
 ### Optional Flags
