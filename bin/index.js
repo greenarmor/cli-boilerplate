@@ -1,4 +1,3 @@
-
 #!/usr/bin/env node
 
 // Modular CLI Merged: Help + Generators
