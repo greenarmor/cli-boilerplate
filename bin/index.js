@@ -3,6 +3,7 @@
 // Modular CLI Merged: Help + Generators + Patch Manager
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { spawnSync } from 'child_process';
 import handlePatchCommand from '../scripts/commands/patch-handler.js'; // ← added
 
 // Dynamic import helper
@@ -24,7 +25,7 @@ Usage:
 Commands:
   --help, -h                 Show this help message
   boiler-cli-bump            Run interactive version bump (patch/minor/major)
-  npm run changelog          Generate/update CHANGELOG.md from conventional commits
+  boiler-cli changelog       Generate/update CHANGELOG.md from conventional commits
   init-cli.js <name>         Bootstrap a new CLI project
 
 Generate Commands:
@@ -46,7 +47,7 @@ Examples:
   boiler-cli patch list
   boiler-cli patch apply readme-fix.patch
   boiler-cli-bump
-  npm run changelog
+  boiler-cli changelog
 `);
   process.exit(0);
 }
@@ -97,6 +98,13 @@ if (command === 'patch') {
 
   handlePatchCommand(patchCmd, patchFile);
   process.exit(0);
+}
+
+// ── Changelog Command ────────────────────────────────────────────────────────
+if (command === 'changelog') {
+  const scriptPath = path.resolve(__dirname, '../scripts/generate-changelog.js');
+  const result = spawnSync('node', [scriptPath], { stdio: 'inherit' });
+  process.exit(result.status ?? 0);
 }
 
 // Default fallback
