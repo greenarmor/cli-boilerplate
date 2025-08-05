@@ -17,6 +17,7 @@
 - GitHub release note generation
 - GitHub Releases automation
 - Semantic release support
+- Modular code generators for components, pages, hooks, layouts, services, styles, and tests
 - Banner, help menu, and badges
 - Ideal for open-source CLI products
 
@@ -37,6 +38,23 @@ Supports:
 - Optional GitHub push + npm publish
 - GitHub release notes preview
 - `--dry-run` support
+
+### Generators
+
+```bash
+boiler-cli generate:component Button
+boiler-cli generate:hook useAuth
+```
+
+Other supported generators:
+
+- `page` – scaffold a new page component
+- `layout` – create a layout template
+- `service` – generate a service module
+- `style` – add a stylesheet file
+- `test` – create a test file
+
+Run `boiler-cli --help` to see available generator commands.
 
 ---
 
