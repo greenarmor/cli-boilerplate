@@ -4,6 +4,8 @@
 
 > A fully-featured starter boilerplate for building and publishing your own CLI tools using Node.js + npm.
 
+Use the prebuilt `boiler-cli` inside an existing web application, or rebrand this boilerplate to create your own CLI with extra automation tools. Rebranding aims to boost automation for web app development and is perfect for DevOps workflows.
+
 ---
 
 ## Features
@@ -21,6 +23,7 @@
 - Framework detection with per-framework templates and a `--framework` override
 - Banner, help menu, and badges
 - Ideal for open-source CLI products
+- DevOps-friendly automation for releases and scaffolding
 
 ---
 
@@ -103,38 +106,43 @@ This project includes semantic-release support out of the box:
 
 ## Quick Start
 
-To use/create a new CLI based on this boilerplate:
+Choose the workflow that fits your needs.
+
+### Use `boiler-cli` in an existing project
 
 ```bash
 npm install -g @greenarmor/cli-boilerplate
+cd path/to/your-existing-project
+boiler-cli generate:component Button
 ```
 
-### Set Git Identity Globally
+The generators detect your framework and drop files into your project automatically.
+
+### Rebrand and extend your own CLI
+
+1. Set Git identity (optional but recommended):
 
 ```bash
 git config --global user.name "your_github_username"
 git config --global user.email "your_email@example.com"
 ```
 
-### Create Your CLI
+2. Scaffold a new CLI, ready to receive more automation tools:
 
 ```bash
 npx @greenarmor/cli-boilerplate my-cli
 ```
 
-### Optional Flags
+3. (Optional) Include extras during creation:
 
-- `--with-emoji` 
-  Show emoji-enhanced output during creation.
-
-- `--full-stack`
-  Add full-stack dev tools: ESLint, Prettier, Husky, Lint-Staged, Jest, ZX, Inquirer, Update Notifier, and CLI polish libraries.
+- `--with-emoji` – show emoji-enhanced output
+- `--full-stack` – add ESLint, Prettier, Husky, Lint-Staged, Jest, ZX, Inquirer, Update Notifier, and more CLI polish libraries
 
 ```bash
 npx @greenarmor/cli-boilerplate my-cli --with-emoji --full-stack
 ```
 
-### Run It
+4. Link and try your branded CLI:
 
 ```bash
 cd my-cli
