@@ -13,7 +13,7 @@
     "start": "node ./bin/index.js",
     "changelog": "node scripts/generate-changelog.js"
   },
-  "devDependencies": {
+  "dependencies": {
     "conventional-changelog-cli": "^5.0.0",
     "inquirer": "^12.9.0"
   },

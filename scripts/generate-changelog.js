@@ -1,9 +1,16 @@
 #!/usr/bin/env node
 
 import { execSync } from 'child_process';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 try {
-  execSync('npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0', {
+  const cliPath = path.resolve(__dirname, '../node_modules/conventional-changelog-cli/cli.js');
+  execSync(`node ${cliPath} -p angular -i CHANGELOG.md -s -r 0`, {
     stdio: 'inherit'
   });
   console.log('Changelog generated successfully.');
