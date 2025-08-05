@@ -82,6 +82,7 @@ html.dark {
 - Banner, help menu, and badges
 - Ideal for open-source CLI products
 - Generators for components, pages, hooks, layouts, services, styles, and tests
+- Framework detection with per-framework templates and a `--framework` override
 
 ---
 
@@ -96,6 +97,16 @@ Built-in scaffolding for:
 - Services
 - Styles
 - Tests
+
+### Framework-Aware Templates
+
+Generators automatically select templates based on your project's framework. The CLI inspects `package.json` for dependencies like React, Vue, or Angular and loads files from `templates/<framework>`. Override detection with the `--framework` flag:
+
+```bash
+boiler-cli generate:component Button --framework vue
+```
+
+If no framework is detected, the generators fall back to `templates/default`.
 
 ---
 
