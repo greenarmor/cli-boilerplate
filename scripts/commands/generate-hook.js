@@ -1,25 +1,30 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-export default function generateHook(hookName) {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function loadTemplate(framework, name) {
+  const templatesDir = path.resolve(__dirname, '../../templates');
+  let filePath = path.join(templatesDir, framework, name);
+  if (!fs.existsSync(filePath)) {
+    filePath = path.join(templatesDir, 'default', name);
+  }
+  return fs.readFileSync(filePath, 'utf8');
+}
+
+export default function generateHook(hookName, framework) {
   const filename = `use${hookName}.js`;
   const dir = `src/hooks`;
   const fullPath = path.join(dir, filename);
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  const content = `import { useState, useEffect } from 'react';
-
-export function use${hookName}() {
-  const [state, setState] = useState(null);
-
-  useEffect(() => {
-    // TODO: implement hook logic
-  }, []);
-
-  return state;
-}
-`;
+  const template = loadTemplate(framework, 'hook.js');
+  const content = template
+    .replace(/__NAME__/g, hookName)
+    .replace(/__NAME_LOWER__/g, hookName.toLowerCase());
 
   fs.writeFileSync(fullPath, content);
   console.log(`Hook created: ${fullPath}`);

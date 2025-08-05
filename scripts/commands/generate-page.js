@@ -1,17 +1,30 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-export default function generatePage(pageName) {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function loadTemplate(framework, name) {
+  const templatesDir = path.resolve(__dirname, '../../templates');
+  let filePath = path.join(templatesDir, framework, name);
+  if (!fs.existsSync(filePath)) {
+    filePath = path.join(templatesDir, 'default', name);
+  }
+  return fs.readFileSync(filePath, 'utf8');
+}
+
+export default function generatePage(pageName, framework) {
   const dir = `src/pages/${pageName}`;
   const filename = `${pageName}.jsx`;
   const fullPath = path.join(dir, filename);
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  const content = `export default function ${pageName}() {
-  return <main><h1>${pageName} Page</h1></main>;
-}
-`;
+  const template = loadTemplate(framework, 'page.jsx');
+  const content = template
+    .replace(/__NAME__/g, pageName)
+    .replace(/__NAME_LOWER__/g, pageName.toLowerCase());
 
   fs.writeFileSync(fullPath, content);
   console.log(`Page created: ${fullPath}`);

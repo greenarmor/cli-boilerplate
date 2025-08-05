@@ -5,12 +5,22 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { spawnSync } from 'child_process';
 import handlePatchCommand from '../scripts/commands/patch-handler.js'; // ← added
+import detectFramework from '../scripts/utils/detect-framework.js';
 
 // Dynamic import helper
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const args = process.argv.slice(2);
+
+// Optional --framework flag override
+let frameworkOverride;
+const fwIndex = args.findIndex((a) => a === '--framework' || a === '-f');
+if (fwIndex !== -1) {
+  frameworkOverride = args[fwIndex + 1];
+  args.splice(fwIndex, 2);
+}
+
 const command = args[0];
 const subcommand = args[1];
 
@@ -75,9 +85,16 @@ if (command && command.startsWith('generate:')) {
     process.exit(1);
   }
 
+  // Detect framework or use override
+  let framework = frameworkOverride || detectFramework();
+  if (!framework) {
+    console.warn('Unable to detect framework. Falling back to "react".');
+    framework = 'react';
+  }
+
   try {
     const generator = await import(`../scripts/commands/${scriptName}`);
-    generator.default(subcommand);
+    generator.default(subcommand, framework);
   } catch (err) {
     console.error('Failed to load generator script:', err.message);
     process.exit(1);

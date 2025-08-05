@@ -1,20 +1,30 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-export default function generateService(serviceName) {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function loadTemplate(framework, name) {
+  const templatesDir = path.resolve(__dirname, '../../templates');
+  let filePath = path.join(templatesDir, framework, name);
+  if (!fs.existsSync(filePath)) {
+    filePath = path.join(templatesDir, 'default', name);
+  }
+  return fs.readFileSync(filePath, 'utf8');
+}
+
+export default function generateService(serviceName, framework) {
   const filename = `${serviceName}.js`;
   const dir = `src/services`;
   const fullPath = path.join(dir, filename);
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  const content = `export const ${serviceName} = {
-  async fetchData() {
-    // TODO: Implement fetch logic
-    return Promise.resolve('data');
-  }
-};
-`;
+  const template = loadTemplate(framework, 'service.js');
+  const content = template
+    .replace(/__NAME__/g, serviceName)
+    .replace(/__NAME_LOWER__/g, serviceName.toLowerCase());
 
   fs.writeFileSync(fullPath, content);
   console.log(`Service created: ${fullPath}`);
