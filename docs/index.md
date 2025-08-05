@@ -81,6 +81,21 @@ html.dark {
 - Semantic release support
 - Banner, help menu, and badges
 - Ideal for open-source CLI products
+- Generators for components, pages, hooks, layouts, services, styles, and tests
+
+---
+
+## Generators
+
+Built-in scaffolding for:
+
+- Components
+- Pages
+- Hooks
+- Layouts
+- Services
+- Styles
+- Tests
 
 ---
 
