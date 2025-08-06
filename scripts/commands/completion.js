@@ -64,3 +64,25 @@ export async function uninstall() {
 export function parseEnv(env = process.env) {
   return tabtab.parseEnv(env);
 }
+
+// Output a simple bash completion script for manual setup
+export function manual(commands) {
+  const script = `# bash completion for cli\n` +
+  `_cli_completion() {\n` +
+  `  local cur prev\n` +
+  `  COMPREPLY=()\n` +
+  `  cur="\${COMP_WORDS[COMP_CWORD]}"\n` +
+  `  prev="\${COMP_WORDS[COMP_CWORD-1]}"\n` +
+  `  if [[ \${COMP_CWORD} -eq 1 ]]; then\n` +
+  `    COMPREPLY=( $(compgen -W "${commands.join(' ')}" -- "$cur") )\n` +
+  `    return 0\n` +
+  `  fi\n` +
+  `  if [[ $prev == 'patch' ]]; then\n` +
+  `    COMPREPLY=( $(compgen -W 'apply list clean' -- "$cur") )\n` +
+  `    return 0\n` +
+  `  fi\n` +
+  `}\n` +
+  `complete -F _cli_completion cli\n`;
+
+  console.log(script);
+}

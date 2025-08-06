@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 import { spawnSync } from 'child_process';
 import handlePatchCommand from '../scripts/commands/patch-handler.js'; // ← added
 import detectFramework from '../scripts/utils/detect-framework.js';
-import { complete, install as installCompletion, uninstall as uninstallCompletion, parseEnv as parseCompletionEnv } from '../scripts/commands/completion.js';
+import { complete, install as installCompletion, uninstall as uninstallCompletion, manual as manualCompletion, parseEnv as parseCompletionEnv } from '../scripts/commands/completion.js';
 
 // Dynamic import helper
 const __filename = fileURLToPath(import.meta.url);
@@ -46,8 +46,13 @@ const subcommand = args[1];
 
 // Completion install/uninstall
 if (command === 'completion') {
-  const action = subcommand === 'uninstall' ? 'uninstall' : 'install';
-  await (action === 'uninstall' ? uninstallCompletion() : installCompletion());
+  if (subcommand === 'uninstall') {
+    await uninstallCompletion();
+  } else if (subcommand === 'manual') {
+    manualCompletion(rootCommands);
+  } else {
+    await installCompletion();
+  }
   process.exit(0);
 }
 
