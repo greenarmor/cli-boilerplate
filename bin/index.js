@@ -6,10 +6,30 @@ import { fileURLToPath } from 'url';
 import { spawnSync } from 'child_process';
 import handlePatchCommand from '../scripts/commands/patch-handler.js'; // ← added
 import detectFramework from '../scripts/utils/detect-framework.js';
+import { complete, install as installCompletion, uninstall as uninstallCompletion, parseEnv as parseCompletionEnv } from '../scripts/commands/completion.js';
 
 // Dynamic import helper
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// ── Generate Command Map ──────────────────────────────────────────────────────
+const generateRoutes = {
+  'generate:component': 'generate-component.js',
+  'generate:page': 'generate-page.js',
+  'generate:hook': 'generate-hook.js',
+  'generate:layout': 'generate-layout.js',
+  'generate:service': 'generate-service.js',
+  'generate:style': 'generate-style.js',
+  'generate:test': 'generate-test.js',
+};
+
+// ── Auto-Completion Handling ───────────────────────────────────────────────────
+const completionEnv = parseCompletionEnv();
+const rootCommands = [...Object.keys(generateRoutes), 'patch', 'changelog', 'completion'];
+if (completionEnv.complete) {
+  complete(completionEnv, rootCommands);
+  process.exit(0);
+}
 
 const args = process.argv.slice(2);
 
@@ -24,6 +44,13 @@ if (fwIndex !== -1) {
 const command = args[0];
 const subcommand = args[1];
 
+// Completion install/uninstall
+if (command === 'completion') {
+  const action = subcommand === 'uninstall' ? 'uninstall' : 'install';
+  await (action === 'uninstall' ? uninstallCompletion() : installCompletion());
+  process.exit(0);
+}
+
 // Handle --help or -h
 if (args.includes('--help') || args.includes('-h') || !command) {
   console.log(`
@@ -34,6 +61,7 @@ Usage:
 
 Commands:
   --help, -h                 Show this help message
+  cli completion             Install shell auto-completion
   cli-bump                   Run interactive version bump (patch/minor/major)
   cli changelog              Generate/update CHANGELOG.md from conventional commits
   init-cli.js <name>         Bootstrap a new CLI project
@@ -63,16 +91,6 @@ Examples:
 }
 
 // ── Modular Generate Command Router ───────────────────────────────────────────
-const generateRoutes = {
-  'generate:component': 'generate-component.js',
-  'generate:page': 'generate-page.js',
-  'generate:hook': 'generate-hook.js',
-  'generate:layout': 'generate-layout.js',
-  'generate:service': 'generate-service.js',
-  'generate:style': 'generate-style.js',
-  'generate:test': 'generate-test.js',
-};
-
 if (command && command.startsWith('generate:')) {
   if (!subcommand) {
     console.error('Error: Name is required for generation.');
@@ -125,4 +143,5 @@ if (command === 'changelog') {
 }
 
 // Default fallback
-console.log('Your CLI logic goes here. Use --help to see usage.');
+console.error(`Unknown command: ${command}. Use --help to see usage.`);
+process.exit(1);

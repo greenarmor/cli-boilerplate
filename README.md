@@ -70,6 +70,17 @@ cli generate:component Button --framework vue
 
 If no framework is detected, the generators fall back to `templates/default`.
 
+### Shell Auto-Completion
+
+Enable tab-completion for commands, flags and patch files:
+
+```bash
+cli completion            # install completion for bash/zsh
+cli completion uninstall  # remove completion
+```
+
+After installation, restart your shell and type `cli ` followed by <kbd>Tab</kbd> to see suggestions.
+
 ---
 
 ## GitHub Release Automation
