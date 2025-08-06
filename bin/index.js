@@ -30,12 +30,12 @@ if (args.includes('--help') || args.includes('-h') || !command) {
 @greenarmor/cli-boilerplate
 
 Usage:
-  boiler-cli <command> [options]
+  cli <command> [options]
 
 Commands:
   --help, -h                 Show this help message
-  boiler-cli-bump            Run interactive version bump (patch/minor/major)
-  boiler-cli changelog       Generate/update CHANGELOG.md from conventional commits
+  cli-bump                   Run interactive version bump (patch/minor/major)
+  cli changelog              Generate/update CHANGELOG.md from conventional commits
   init-cli.js <name>         Bootstrap a new CLI project
 
 Generate Commands:
@@ -53,11 +53,11 @@ Patch Commands:
   patch clean                Delete all patches in /patches (keeps README.md)
 
 Examples:
-  boiler-cli generate:component MyButton
-  boiler-cli patch list
-  boiler-cli patch apply readme-fix.patch
-  boiler-cli-bump
-  boiler-cli changelog
+  cli generate:component MyButton
+  cli patch list
+  cli patch apply readme-fix.patch
+  cli-bump
+  cli changelog
 `);
   process.exit(0);
 }
@@ -109,7 +109,7 @@ if (command === 'patch') {
   const patchFile = args[2];    // filename.patch (if needed)
 
   if (!patchCmd) {
-    console.error('Usage: boiler-cli patch <apply|list|clean> [file.patch]');
+    console.error('Usage: cli patch <apply|list|clean> [file.patch]');
     process.exit(1);
   }
 

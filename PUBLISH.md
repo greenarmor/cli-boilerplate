@@ -1,15 +1,15 @@
 # 🚀 Publishing Guide for @greenarmor/cli-boilerplate
 
-This guide walks you through bumping versions, pushing tags, and automating releases using the `boiler-cli-bump` tool.
+This guide walks you through bumping versions, pushing tags, and automating releases using the `cli-bump` tool.
 
 ---
 
-## 🧪 Simulation: `boiler-cli-bump`
+## 🧪 Simulation: `cli-bump`
 
 When you run:
 
 ```bash
-boiler-cli-bump
+cli-bump
 ```
 
 You’ll see:

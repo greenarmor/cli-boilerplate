@@ -5,9 +5,9 @@
   "type": "module",
   "bin": {
     "@greenarmor/cli-boilerplate": "./scripts/create-cli.js",
-    "boiler-cli": "./bin/index.js",
-    "boiler-cli-bump": "./scripts/bump-cli.js",
-    "boiler-cli-create": "./scripts/create-cli.js"
+    "cli": "./bin/index.js",
+    "cli-bump": "./scripts/bump-cli.js",
+    "cli-create": "./scripts/create-cli.js"
   },
   "scripts": {
     "start": "node ./bin/index.js",

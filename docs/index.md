@@ -66,15 +66,15 @@ html.dark {
 
 - A fully-featured starter boilerplate for building and publishing your own CLI tools using Node.js + npm.
 
-Use the prebuilt `boiler-cli` inside an existing web application, or rebrand this boilerplate to create your own CLI with extra automation tools. Rebranding aims to boost automation for web app development and is perfect for DevOps workflows.
+Use the prebuilt `cli` inside an existing web application, or rebrand this boilerplate to create your own CLI with extra automation tools. Rebranding aims to boost automation for web app development and is perfect for DevOps workflows.
 
 ---
 
 ## Features
 
 - Publish-ready scoped CLI
-- `boiler-cli` global command
-- `boiler-cli-bump` version bump tool
+- `cli` global command
+- `cli-bump` version bump tool
 - `--dry-run` mode
 - Git commit + tag + push
 - Optional `npm publish`
@@ -106,7 +106,7 @@ Built-in scaffolding for:
 Generators automatically select templates based on your project's framework. The CLI inspects `package.json` for dependencies like React, Vue, or Angular and loads files from `templates/<framework>`. Override detection with the `--framework` flag:
 
 ```bash
-boiler-cli generate:component Button --framework vue
+cli generate:component Button --framework vue
 ```
 
 If no framework is detected, the generators fall back to `templates/default`.
@@ -118,7 +118,7 @@ If no framework is detected, the generators fall back to `templates/default`.
 ### Version Bump
 
 ```bash
-boiler-cli-bump
+cli-bump
 ```
 
 Supports:
@@ -167,12 +167,12 @@ This project includes semantic-release support out of the box:
  
 Choose the workflow that fits your needs.
 
-### Use `boiler-cli` in an existing project
+### Use `cli` in an existing project
 
 ```bash
 npm install -g @greenarmor/cli-boilerplate
 cd path/to/your-existing-project
-boiler-cli generate:component Button
+cli generate:component Button
 ```
 
 The generators detect your framework and drop files into your project automatically.
