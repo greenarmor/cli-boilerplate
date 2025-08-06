@@ -35,7 +35,14 @@ export function complete(env, commands) {
 
 export async function install() {
   try {
-    await tabtab.install({ name: 'cli', completer: 'cli' });
+    // Fallback to bash when SHELL is not defined (non-interactive environments)
+    if (!process.env.SHELL) {
+      process.env.SHELL = '/bin/bash';
+    }
+
+    // Use absolute path to current binary so completion works without global install
+    const completer = path.resolve(process.argv[1] || 'cli');
+    await tabtab.install({ name: 'cli', completer });
     console.log('Auto-completion installed. Restart your shell.');
   } catch (err) {
     console.error('Error installing auto-completion:', err.message);
@@ -44,6 +51,9 @@ export async function install() {
 
 export async function uninstall() {
   try {
+    if (!process.env.SHELL) {
+      process.env.SHELL = '/bin/bash';
+    }
     await tabtab.uninstall({ name: 'cli' });
     console.log('Auto-completion uninstalled.');
   } catch (err) {
