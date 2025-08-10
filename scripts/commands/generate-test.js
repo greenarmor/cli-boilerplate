@@ -27,7 +27,15 @@ export default function generateTest(testName, framework) {
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  const template = loadTemplate(framework, 'test.js');
+  const templateFileMap = {
+    react: 'test.js',
+    vue: 'test.js',
+    angular: 'test.ts'
+  };
+  const template = loadTemplate(
+    framework,
+    templateFileMap[framework] || 'test.js'
+  );
   const content = template
     .replace(/__NAME__/g, testName)
     .replace(/__NAME_LOWER__/g, testName.toLowerCase());

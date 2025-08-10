@@ -27,7 +27,15 @@ export default function generateComponent(componentName, framework) {
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  const template = loadTemplate(framework, 'component.jsx');
+  const templateFileMap = {
+    react: 'component.jsx',
+    vue: 'component.vue',
+    angular: 'component.ts'
+  };
+  const template = loadTemplate(
+    framework,
+    templateFileMap[framework] || 'component.jsx'
+  );
   const content = template
     .replace(/__NAME__/g, componentName)
     .replace(/__NAME_LOWER__/g, componentName.toLowerCase());

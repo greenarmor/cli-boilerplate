@@ -27,7 +27,15 @@ export default function generateService(serviceName, framework) {
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  const template = loadTemplate(framework, 'service.js');
+  const templateFileMap = {
+    react: 'service.js',
+    vue: 'service.js',
+    angular: 'service.ts'
+  };
+  const template = loadTemplate(
+    framework,
+    templateFileMap[framework] || 'service.js'
+  );
   const content = template
     .replace(/__NAME__/g, serviceName)
     .replace(/__NAME_LOWER__/g, serviceName.toLowerCase());

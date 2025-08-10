@@ -27,7 +27,15 @@ export default function generateHook(hookName, framework) {
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  const template = loadTemplate(framework, 'hook.js');
+  const templateFileMap = {
+    react: 'hook.js',
+    vue: 'hook.js',
+    angular: 'hook.ts'
+  };
+  const template = loadTemplate(
+    framework,
+    templateFileMap[framework] || 'hook.js'
+  );
   const content = template
     .replace(/__NAME__/g, hookName)
     .replace(/__NAME_LOWER__/g, hookName.toLowerCase());

@@ -27,7 +27,15 @@ export default function generatePage(pageName, framework) {
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  const template = loadTemplate(framework, 'page.jsx');
+  const templateFileMap = {
+    react: 'page.jsx',
+    vue: 'page.vue',
+    angular: 'page.ts'
+  };
+  const template = loadTemplate(
+    framework,
+    templateFileMap[framework] || 'page.jsx'
+  );
   const content = template
     .replace(/__NAME__/g, pageName)
     .replace(/__NAME_LOWER__/g, pageName.toLowerCase());
