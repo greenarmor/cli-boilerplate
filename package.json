@@ -11,7 +11,8 @@
   },
   "scripts": {
     "start": "node ./bin/index.js",
-    "changelog": "node scripts/generate-changelog.js"
+    "changelog": "node scripts/generate-changelog.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "conventional-changelog-cli": "^5.0.0",
@@ -37,5 +38,18 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "extensionsToTreatAsEsm": [
+      ".jsx"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/templates/"
+    ]
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }
