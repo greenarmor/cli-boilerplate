@@ -15,26 +15,29 @@ function loadTemplate(framework, name) {
   return fs.readFileSync(filePath, 'utf8');
 }
 
-export default function generateComponent(componentName, framework) {
+export default function generateComponent(componentName, framework, useTs = false) {
   const { components } = loadConfig();
   const dir = components.dir
     .replace(/__NAME__/g, componentName)
     .replace(/__NAME_LOWER__/g, componentName.toLowerCase());
-  const filename = components.file
+  let filename = components.file
     .replace(/__NAME__/g, componentName)
     .replace(/__NAME_LOWER__/g, componentName.toLowerCase());
+  if (useTs) {
+    filename = filename.replace(/\.jsx$/, '.tsx').replace(/\.js$/, '.ts');
+  }
   const fullPath = path.join(dir, filename);
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
   const templateFileMap = {
-    react: 'component.jsx',
+    react: useTs ? 'component.tsx' : 'component.jsx',
     vue: 'component.vue',
     angular: 'component.ts'
   };
   const template = loadTemplate(
     framework,
-    templateFileMap[framework] || 'component.jsx'
+    templateFileMap[framework] || (useTs ? 'component.tsx' : 'component.jsx')
   );
   const content = template
     .replace(/__NAME__/g, componentName)

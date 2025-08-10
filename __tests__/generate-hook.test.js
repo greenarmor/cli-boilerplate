@@ -25,3 +25,13 @@ test('creates hook file with template substitution', () => {
   expect(content).toContain(`use${name}`);
   expect(content).not.toMatch(/__NAME__/);
 });
+
+test('creates hook file in TypeScript when flag is set', () => {
+  const name = 'TsAuth';
+  generateHook(name, 'react', true);
+  const filePath = path.join(tmpDir, 'src', 'hooks', `use${name}.ts`);
+  expect(fs.existsSync(filePath)).toBe(true);
+  const content = fs.readFileSync(filePath, 'utf8');
+  expect(content).toContain(`use${name}`);
+  expect(content).not.toMatch(/__NAME__/);
+});

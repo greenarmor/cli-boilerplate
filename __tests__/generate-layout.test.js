@@ -27,3 +27,15 @@ test('creates layout file with template substitution', () => {
   expect(content).not.toMatch(/__NAME__/);
   expect(content).not.toMatch(/__NAME_LOWER__/);
 });
+
+test('creates layout file in TypeScript when flag is set', () => {
+  const name = 'TsMain';
+  generateLayout(name, 'react', true);
+  const filePath = path.join(tmpDir, 'src', 'layouts', name, `${name}.tsx`);
+  expect(fs.existsSync(filePath)).toBe(true);
+  const content = fs.readFileSync(filePath, 'utf8');
+  expect(content).toContain(name);
+  expect(content).toContain(name.toLowerCase());
+  expect(content).not.toMatch(/__NAME__/);
+  expect(content).not.toMatch(/__NAME_LOWER__/);
+});

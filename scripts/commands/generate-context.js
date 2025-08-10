@@ -15,26 +15,29 @@ function loadTemplate(framework, name) {
   return fs.readFileSync(filePath, 'utf8');
 }
 
-export default function generateContext(contextName, framework) {
+export default function generateContext(contextName, framework, useTs = false) {
   const { contexts } = loadConfig();
   const dir = contexts.dir
     .replace(/__NAME__/g, contextName)
     .replace(/__NAME_LOWER__/g, contextName.toLowerCase());
-  const filename = contexts.file
+  let filename = contexts.file
     .replace(/__NAME__/g, contextName)
     .replace(/__NAME_LOWER__/g, contextName.toLowerCase());
+  if (useTs) {
+    filename = filename.replace(/\.jsx$/, '.tsx').replace(/\.js$/, '.ts');
+  }
   const fullPath = path.join(dir, filename);
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
   const templateFileMap = {
-    react: 'context.js',
+    react: useTs ? 'context.ts' : 'context.js',
     vue: 'context.js',
     angular: 'context.ts'
   };
   const template = loadTemplate(
     framework,
-    templateFileMap[framework] || 'context.js'
+    templateFileMap[framework] || (useTs ? 'context.ts' : 'context.js')
   );
   const content = template
     .replace(/__NAME__/g, contextName)

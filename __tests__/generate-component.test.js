@@ -25,3 +25,13 @@ test('creates component file with template substitution', () => {
   expect(content).toContain(name);
   expect(content).not.toMatch(/__NAME__/);
 });
+
+test('creates component file in TypeScript when flag is set', () => {
+  const name = 'TsButton';
+  generateComponent(name, 'react', true);
+  const filePath = path.join(tmpDir, 'src', 'components', name, `${name}.tsx`);
+  expect(fs.existsSync(filePath)).toBe(true);
+  const content = fs.readFileSync(filePath, 'utf8');
+  expect(content).toContain(name);
+  expect(content).not.toMatch(/__NAME__/);
+});

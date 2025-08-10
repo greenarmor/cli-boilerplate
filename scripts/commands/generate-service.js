@@ -15,26 +15,29 @@ function loadTemplate(framework, name) {
   return fs.readFileSync(filePath, 'utf8');
 }
 
-export default function generateService(serviceName, framework) {
+export default function generateService(serviceName, framework, useTs = false) {
   const { services } = loadConfig();
   const dir = services.dir
     .replace(/__NAME__/g, serviceName)
     .replace(/__NAME_LOWER__/g, serviceName.toLowerCase());
-  const filename = services.file
+  let filename = services.file
     .replace(/__NAME__/g, serviceName)
     .replace(/__NAME_LOWER__/g, serviceName.toLowerCase());
+  if (useTs) {
+    filename = filename.replace(/\.jsx$/, '.tsx').replace(/\.js$/, '.ts');
+  }
   const fullPath = path.join(dir, filename);
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
   const templateFileMap = {
-    react: 'service.js',
+    react: useTs ? 'service.ts' : 'service.js',
     vue: 'service.js',
     angular: 'service.ts'
   };
   const template = loadTemplate(
     framework,
-    templateFileMap[framework] || 'service.js'
+    templateFileMap[framework] || (useTs ? 'service.ts' : 'service.js')
   );
   const content = template
     .replace(/__NAME__/g, serviceName)

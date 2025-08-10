@@ -15,26 +15,29 @@ function loadTemplate(framework, name) {
   return fs.readFileSync(filePath, 'utf8');
 }
 
-export default function generateLayout(layoutName, framework) {
+export default function generateLayout(layoutName, framework, useTs = false) {
   const { layouts } = loadConfig();
   const dir = layouts.dir
     .replace(/__NAME__/g, layoutName)
     .replace(/__NAME_LOWER__/g, layoutName.toLowerCase());
-  const filename = layouts.file
+  let filename = layouts.file
     .replace(/__NAME__/g, layoutName)
     .replace(/__NAME_LOWER__/g, layoutName.toLowerCase());
+  if (useTs) {
+    filename = filename.replace(/\.jsx$/, '.tsx').replace(/\.js$/, '.ts');
+  }
   const fullPath = path.join(dir, filename);
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
   const templateFileMap = {
-    react: 'layout.jsx',
+    react: useTs ? 'layout.tsx' : 'layout.jsx',
     vue: 'layout.vue',
     angular: 'layout.ts'
   };
   const template = loadTemplate(
     framework,
-    templateFileMap[framework] || 'layout.jsx'
+    templateFileMap[framework] || (useTs ? 'layout.tsx' : 'layout.jsx')
   );
   const content = template
     .replace(/__NAME__/g, layoutName)

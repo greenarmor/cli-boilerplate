@@ -55,6 +55,11 @@ if (fwIndex !== -1) {
   args.splice(fwIndex, 2);
 }
 
+// Optional --ts flag to generate TypeScript files
+const tsIndex = args.indexOf('--ts');
+const useTs = tsIndex !== -1;
+if (useTs) args.splice(tsIndex, 1);
+
 const command = args[0];
 const subcommand = args[1];
 
@@ -102,6 +107,7 @@ Patch Commands:
 
 Examples:
   cli generate:component MyButton
+  cli generate:component MyButton --ts
   cli patch list
   cli patch apply readme-fix.patch
   cli-bump
@@ -132,7 +138,7 @@ if (command && command.startsWith('generate:')) {
 
   try {
     const generator = await import(`../scripts/commands/${scriptName}`);
-    generator.default(subcommand, framework);
+    generator.default(subcommand, framework, useTs);
   } catch (err) {
     console.error('Failed to load generator script:', err.message);
     process.exit(1);
