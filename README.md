@@ -21,6 +21,9 @@ Use the prebuilt `cli` inside an existing web application, or rebrand this boile
 - Semantic release support
 - Modular code generators for components, pages, hooks, layouts, services, contexts, styles, and tests
 - Framework detection with per-framework templates and a `--framework` override
+- Extensible through a plugin system
+- Optional TypeScript templates via `--ts`
+- Jest test suite for generators
 - Banner, help menu, and badges
 - Ideal for open-source CLI products
 - DevOps-friendly automation for releases and scaffolding
@@ -61,6 +64,12 @@ Other supported generators:
 - `context` – create a context module
 
 Run `cli --help` to see available generator commands.
+
+Use the `--ts` flag to scaffold TypeScript files instead of JavaScript:
+
+```bash
+cli generate:component Button --ts
+```
 
 ### Framework-Aware Templates
 
@@ -109,6 +118,14 @@ cli completion manual     # output simple bash completion script
 ```
 
 After installation, restart your shell and type `cli ` followed by <kbd>Tab</kbd> to see suggestions.
+
+### Testing
+
+Run the Jest test suite to verify generators and templates:
+
+```bash
+npm test
+```
 
 ---
 
