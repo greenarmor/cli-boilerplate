@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import loadConfig from '../utils/load-config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,8 +16,13 @@ function loadTemplate(framework, name) {
 }
 
 export default function generateStyle(styleName, framework) {
-  const dir = `src/styles/${styleName}`;
-  const filename = `${styleName}.module.css`;
+  const { styles } = loadConfig();
+  const dir = styles.dir
+    .replace(/__NAME__/g, styleName)
+    .replace(/__NAME_LOWER__/g, styleName.toLowerCase());
+  const filename = styles.file
+    .replace(/__NAME__/g, styleName)
+    .replace(/__NAME_LOWER__/g, styleName.toLowerCase());
   const fullPath = path.join(dir, filename);
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import loadConfig from '../utils/load-config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,8 +16,13 @@ function loadTemplate(framework, name) {
 }
 
 export default function generateTest(testName, framework) {
-  const dir = `src/__tests__/${testName}`;
-  const filename = `${testName}.test.js`;
+  const { tests } = loadConfig();
+  const dir = tests.dir
+    .replace(/__NAME__/g, testName)
+    .replace(/__NAME_LOWER__/g, testName.toLowerCase());
+  const filename = tests.file
+    .replace(/__NAME__/g, testName)
+    .replace(/__NAME_LOWER__/g, testName.toLowerCase());
   const fullPath = path.join(dir, filename);
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });

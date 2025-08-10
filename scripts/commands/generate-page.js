@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import loadConfig from '../utils/load-config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,8 +16,13 @@ function loadTemplate(framework, name) {
 }
 
 export default function generatePage(pageName, framework) {
-  const dir = `src/pages/${pageName}`;
-  const filename = `${pageName}.jsx`;
+  const { pages } = loadConfig();
+  const dir = pages.dir
+    .replace(/__NAME__/g, pageName)
+    .replace(/__NAME_LOWER__/g, pageName.toLowerCase());
+  const filename = pages.file
+    .replace(/__NAME__/g, pageName)
+    .replace(/__NAME_LOWER__/g, pageName.toLowerCase());
   const fullPath = path.join(dir, filename);
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });

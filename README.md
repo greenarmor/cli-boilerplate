@@ -70,6 +70,17 @@ cli generate:component Button --framework vue
 
 If no framework is detected, the generators fall back to `templates/default`.
 
+### Configuration
+
+Generators read their output paths from `cli.config.json` in your project root. Omit the file to use defaults. Example:
+
+```json
+{
+  "components": { "dir": "src/components/__NAME__", "file": "__NAME__.jsx" },
+  "hooks": { "dir": "src/hooks", "file": "use__NAME__.js" }
+}
+```
+
 ### Shell Auto-Completion
 
 Enable tab-completion for commands, flags and patch files:

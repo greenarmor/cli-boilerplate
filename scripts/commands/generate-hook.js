@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import loadConfig from '../utils/load-config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,8 +16,13 @@ function loadTemplate(framework, name) {
 }
 
 export default function generateHook(hookName, framework) {
-  const filename = `use${hookName}.js`;
-  const dir = `src/hooks`;
+  const { hooks } = loadConfig();
+  const dir = hooks.dir
+    .replace(/__NAME__/g, hookName)
+    .replace(/__NAME_LOWER__/g, hookName.toLowerCase());
+  const filename = hooks.file
+    .replace(/__NAME__/g, hookName)
+    .replace(/__NAME_LOWER__/g, hookName.toLowerCase());
   const fullPath = path.join(dir, filename);
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
