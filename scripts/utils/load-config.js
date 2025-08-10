@@ -22,6 +22,10 @@ const defaultConfig = {
     dir: 'src/services',
     file: '__NAME__.js'
   },
+  contexts: {
+    dir: 'src/context',
+    file: '__NAME__Context.js'
+  },
   styles: {
     dir: 'src/styles/__NAME__',
     file: '__NAME__.module.css'

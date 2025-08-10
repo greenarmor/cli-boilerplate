@@ -22,6 +22,7 @@ const generateRoutes = {
   'generate:service': 'generate-service.js',
   'generate:style': 'generate-style.js',
   'generate:test': 'generate-test.js',
+  'generate:context': 'generate-context.js',
 };
 
 // Load plugins and merge provided commands
@@ -92,6 +93,7 @@ Generate Commands:
   generate:service <name>    Create new service
   generate:style <name>      Create new style
   generate:test <name>       Create new test
+  generate:context <name>    Create new context
 
 Patch Commands:
   patch list                 List available patches in /patches
