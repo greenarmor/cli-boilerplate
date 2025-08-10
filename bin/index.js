@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import { spawnSync } from 'child_process';
 import handlePatchCommand from '../scripts/commands/patch-handler.js'; // ← added
 import detectFramework from '../scripts/utils/detect-framework.js';
+import loadPlugins from '../scripts/utils/plugin-loader.js';
 import { complete, install as installCompletion, uninstall as uninstallCompletion, manual as manualCompletion, parseEnv as parseCompletionEnv } from '../scripts/commands/completion.js';
 
 // Dynamic import helper
@@ -23,9 +24,21 @@ const generateRoutes = {
   'generate:test': 'generate-test.js',
 };
 
+// Load plugins and merge provided commands
+const pluginData = await loadPlugins();
+Object.assign(generateRoutes, pluginData.generateRoutes);
+
 // ── Auto-Completion Handling ───────────────────────────────────────────────────
 const completionEnv = parseCompletionEnv();
-const rootCommands = [...Object.keys(generateRoutes), 'patch', 'changelog', 'completion'];
+const rootCommands = [
+  ...new Set([
+    ...Object.keys(generateRoutes),
+    'patch',
+    'changelog',
+    'completion',
+    ...(pluginData.rootCommands || []),
+  ]),
+];
 if (completionEnv.complete) {
   complete(completionEnv, rootCommands);
   process.exit(0);
