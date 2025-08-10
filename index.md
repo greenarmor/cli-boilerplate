@@ -83,9 +83,12 @@ Use the prebuilt `cli` inside an existing web application, or rebrand this boile
 - Semantic release support
 - Banner, help menu, and badges
 - Ideal for open-source CLI products
-- Generators for components, pages, hooks, layouts, services, styles, and tests
+- Generators for components, pages, hooks, layouts, services, contexts, styles, and tests
 - Framework detection with per-framework templates and a `--framework` override
 - Built-in templates for React, Vue, and Angular
+- Extensible through a plugin system
+- Optional TypeScript templates via `--ts`
+- Jest test suite for generators
 - DevOps-friendly automation for releases and scaffolding
 
 ---
@@ -101,6 +104,7 @@ Built-in scaffolding for:
 - Services
 - Styles
 - Tests
+- Contexts
 
 ### Framework-Aware Templates
 
@@ -121,6 +125,26 @@ Generators read their output paths from `cli.config.json` in your project root. 
 {
   "components": { "dir": "src/components/__NAME__", "file": "__NAME__.jsx" },
   "hooks": { "dir": "src/hooks", "file": "use__NAME__.js" }
+  }
+  ```
+
+### TypeScript Templates
+
+Add the `--ts` flag to any generator to output `.ts` or `.tsx` files using TypeScript templates:
+
+```bash
+cli generate:component Button --ts
+```
+
+### Plugins
+
+Extend the CLI with plugins. List module paths or package names under `cli.plugins` in `package.json`. Each plugin can add `generateRoutes` or `rootCommands`.
+
+```json
+{
+  "cli": {
+    "plugins": ["./plugins/my-plugin.js"]
+  }
 }
 ```
 
@@ -141,6 +165,14 @@ Supports:
 - Optional GitHub push + npm publish
 - GitHub release notes preview
 - `--dry-run` support
+
+### Testing
+
+Run the Jest test suite to verify generators and templates:
+
+```bash
+npm test
+```
 
 ---
 
