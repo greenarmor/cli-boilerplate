@@ -15,26 +15,29 @@ function loadTemplate(framework, name) {
   return fs.readFileSync(filePath, 'utf8');
 }
 
-export default function generateHook(hookName, framework) {
+export default function generateHook(hookName, framework, useTs = false) {
   const { hooks } = loadConfig();
   const dir = hooks.dir
     .replace(/__NAME__/g, hookName)
     .replace(/__NAME_LOWER__/g, hookName.toLowerCase());
-  const filename = hooks.file
+  let filename = hooks.file
     .replace(/__NAME__/g, hookName)
     .replace(/__NAME_LOWER__/g, hookName.toLowerCase());
+  if (useTs) {
+    filename = filename.replace(/\.jsx$/, '.tsx').replace(/\.js$/, '.ts');
+  }
   const fullPath = path.join(dir, filename);
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
   const templateFileMap = {
-    react: 'hook.js',
+    react: useTs ? 'hook.ts' : 'hook.js',
     vue: 'hook.js',
     angular: 'hook.ts'
   };
   const template = loadTemplate(
     framework,
-    templateFileMap[framework] || 'hook.js'
+    templateFileMap[framework] || (useTs ? 'hook.ts' : 'hook.js')
   );
   const content = template
     .replace(/__NAME__/g, hookName)

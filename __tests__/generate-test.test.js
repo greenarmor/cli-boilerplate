@@ -25,3 +25,13 @@ test('creates test file with template substitution', () => {
   expect(content).toContain(name);
   expect(content).not.toMatch(/__NAME__/);
 });
+
+test('creates test file in TypeScript when flag is set', () => {
+  const name = 'TsWidget';
+  generateTest(name, 'react', true);
+  const filePath = path.join(tmpDir, 'src', '__tests__', name, `${name}.test.tsx`);
+  expect(fs.existsSync(filePath)).toBe(true);
+  const content = fs.readFileSync(filePath, 'utf8');
+  expect(content).toContain(name);
+  expect(content).not.toMatch(/__NAME__/);
+});

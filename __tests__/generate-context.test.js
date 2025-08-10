@@ -25,3 +25,13 @@ test('creates context file with template substitution', () => {
   expect(content).toContain(name);
   expect(content).not.toMatch(/__NAME__/);
 });
+
+test('creates context file in TypeScript when flag is set', () => {
+  const name = 'TsAuth';
+  generateContext(name, 'react', true);
+  const filePath = path.join(tmpDir, 'src', 'context', `${name}Context.ts`);
+  expect(fs.existsSync(filePath)).toBe(true);
+  const content = fs.readFileSync(filePath, 'utf8');
+  expect(content).toContain(name);
+  expect(content).not.toMatch(/__NAME__/);
+});

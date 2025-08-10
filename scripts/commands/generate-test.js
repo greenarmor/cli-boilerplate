@@ -15,26 +15,29 @@ function loadTemplate(framework, name) {
   return fs.readFileSync(filePath, 'utf8');
 }
 
-export default function generateTest(testName, framework) {
+export default function generateTest(testName, framework, useTs = false) {
   const { tests } = loadConfig();
   const dir = tests.dir
     .replace(/__NAME__/g, testName)
     .replace(/__NAME_LOWER__/g, testName.toLowerCase());
-  const filename = tests.file
+  let filename = tests.file
     .replace(/__NAME__/g, testName)
     .replace(/__NAME_LOWER__/g, testName.toLowerCase());
+  if (useTs) {
+    filename = filename.replace(/\.test\.js$/, '.test.tsx');
+  }
   const fullPath = path.join(dir, filename);
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
   const templateFileMap = {
-    react: 'test.js',
-    vue: 'test.js',
+    react: useTs ? 'test.tsx' : 'test.js',
+    vue: useTs ? 'test.tsx' : 'test.js',
     angular: 'test.ts'
   };
   const template = loadTemplate(
     framework,
-    templateFileMap[framework] || 'test.js'
+    templateFileMap[framework] || (useTs ? 'test.tsx' : 'test.js')
   );
   const content = template
     .replace(/__NAME__/g, testName)
