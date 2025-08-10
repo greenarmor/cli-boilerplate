@@ -81,6 +81,21 @@ Generators read their output paths from `cli.config.json` in your project root. 
 }
 ```
 
+### Plugins
+
+Extend the CLI with plugins. Add module paths or package names to the `cli.plugins` array in your `package.json`. Each plugin should export an object with optional `generateRoutes` and `rootCommands` properties.
+
+Example:
+
+```json
+{
+  "cli": {
+    "plugins": ["./plugins/my-plugin.js"]
+  }
+}
+```
+
+
 ### Shell Auto-Completion
 
 Enable tab-completion for commands, flags and patch files:
