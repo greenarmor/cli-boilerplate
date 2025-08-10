@@ -27,7 +27,15 @@ export default function generateLayout(layoutName, framework) {
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  const template = loadTemplate(framework, 'layout.jsx');
+  const templateFileMap = {
+    react: 'layout.jsx',
+    vue: 'layout.vue',
+    angular: 'layout.ts'
+  };
+  const template = loadTemplate(
+    framework,
+    templateFileMap[framework] || 'layout.jsx'
+  );
   const content = template
     .replace(/__NAME__/g, layoutName)
     .replace(/__NAME_LOWER__/g, layoutName.toLowerCase());

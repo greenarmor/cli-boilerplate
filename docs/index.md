@@ -85,6 +85,7 @@ Use the prebuilt `cli` inside an existing web application, or rebrand this boile
 - Ideal for open-source CLI products
 - Generators for components, pages, hooks, layouts, services, styles, and tests
 - Framework detection with per-framework templates and a `--framework` override
+- Built-in templates for React, Vue, and Angular
 - DevOps-friendly automation for releases and scaffolding
 
 ---
@@ -107,6 +108,7 @@ Generators automatically select templates based on your project's framework. The
 
 ```bash
 cli generate:component Button --framework vue
+cli generate:service Api --framework angular
 ```
 
 If no framework is detected, the generators fall back to `templates/default`.

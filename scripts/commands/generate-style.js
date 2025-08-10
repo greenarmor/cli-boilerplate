@@ -27,7 +27,15 @@ export default function generateStyle(styleName, framework) {
 
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  const template = loadTemplate(framework, 'style.css');
+  const templateFileMap = {
+    react: 'style.css',
+    vue: 'style.css',
+    angular: 'style.css'
+  };
+  const template = loadTemplate(
+    framework,
+    templateFileMap[framework] || 'style.css'
+  );
   const content = template
     .replace(/__NAME__/g, styleName)
     .replace(/__NAME_LOWER__/g, styleName.toLowerCase());
