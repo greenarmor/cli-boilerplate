@@ -19,7 +19,7 @@ Use the prebuilt `cli` inside an existing web application, or rebrand this boile
 - GitHub release note generation
 - GitHub Releases automation
 - Semantic release support
-- Modular code generators for components, pages, hooks, layouts, services, styles, and tests
+- Modular code generators for components, pages, hooks, layouts, services, contexts, styles, and tests
 - Framework detection with per-framework templates and a `--framework` override
 - Banner, help menu, and badges
 - Ideal for open-source CLI products
@@ -48,6 +48,7 @@ Supports:
 ```bash
 cli generate:component Button
 cli generate:hook useAuth
+cli generate:context Auth
 ```
 
 Other supported generators:
@@ -57,6 +58,7 @@ Other supported generators:
 - `service` – generate a service module
 - `style` – add a stylesheet file
 - `test` – create a test file
+- `context` – create a context module
 
 Run `cli --help` to see available generator commands.
 
