@@ -11,7 +11,8 @@ Use the prebuilt `cli` inside an existing web application, or rebrand this boile
 ## Features
 
 - Publish-ready scoped CLI
-- `cli` global command
+- `cli` global command and modular generators
+- **AI chat command for natural-language scaffolding (dev-only)**
 - `cli-bump` version bump tool
 - `--dry-run` mode
 - Git commit + tag + push
@@ -27,124 +28,6 @@ Use the prebuilt `cli` inside an existing web application, or rebrand this boile
 - Banner, help menu, and badges
 - Ideal for open-source CLI products
 - DevOps-friendly automation for releases and scaffolding
-
----
-
-## CLI Tooling
-
-### Version Bump
-
-```bash
-cli-bump
-```
-
-Supports:
-
-- Select bump type (patch, minor, major)
-- Git log + changelog preview
-- Optional GitHub push + npm publish
-- GitHub release notes preview
-- `--dry-run` support
-
-### Generators
-
-```bash
-cli generate:component Button
-cli generate:hook useAuth
-cli generate:context Auth
-```
-
-Other supported generators:
-
-- `page` – scaffold a new page component
-- `layout` – create a layout template
-- `service` – generate a service module
-- `style` – add a stylesheet file
-- `test` – create a test file
-- `context` – create a context module
-
-Run `cli --help` to see available generator commands.
-
-Use the `--ts` flag to scaffold TypeScript files instead of JavaScript:
-
-```bash
-cli generate:component Button --ts
-```
-
-### Framework-Aware Templates
-
-Generators automatically select templates based on your project's framework. The CLI inspects your `package.json` for dependencies like React, Vue, or Angular and loads files from `templates/<framework>`. Override detection with the `--framework` flag:
-
-```bash
-cli generate:component Button --framework vue
-```
-
-If no framework is detected, the generators fall back to `templates/default`.
-
-### Configuration
-
-Generators read their output paths from `cli.config.json` in your project root. Omit the file to use defaults. Example:
-
-```json
-{
-  "components": { "dir": "src/components/__NAME__", "file": "__NAME__.jsx" },
-  "hooks": { "dir": "src/hooks", "file": "use__NAME__.js" }
-}
-```
-
-### Plugins
-
-Extend the CLI with plugins. Add module paths or package names to the `cli.plugins` array in your `package.json`. Each plugin should export an object with optional `generateRoutes` and `rootCommands` properties.
-
-Example:
-
-```json
-{
-  "cli": {
-    "plugins": ["./plugins/my-plugin.js"]
-  }
-}
-```
-
-### Testing
-
-Run the Jest test suite to verify generators and templates:
-
-```bash
-npm test
-```
-
----
-
-## GitHub Release Automation
-
-To create a release on GitHub:
-
-```bash
-export GITHUB_TOKEN=ghp_YourTokenHere
-node scripts/release-to-github.js
-```
-
----
-
-## Semantic Release via CI
-
-This project includes semantic-release support out of the box:
-
-- Automated changelog
-- GitHub Releases
-- npm publishing
-
-**Requirements:**
-
-- `NPM_TOKEN` in GitHub Actions secrets
-- `GITHUB_TOKEN` in GitHub Actions secrets
-
----
-
-## License
-
-**MIT** — Customize and distribute freely under your own CLI brand.
 
 ---
 
@@ -197,7 +80,86 @@ my-cli --help
 
 ---
 
-## Built by [@greenarmor](https://github.com/greenarmor)
+## CLI Tooling
+
+### AI Chat (dev only)
+
+Chat with the CLI using natural language to run allowed generator commands.
+
+```bash
+npm run chat
+# or
+boiler-cli chat
+```
+
+Requires `OPENAI_API_KEY` in your local `.env` and is disabled when `NODE_ENV=production`.
+
+### Generators
+
+```bash
+cli generate:component Button
+cli generate:hook useAuth
+cli generate:context Auth
+```
+
+Other supported generators:
+
+- `page` – scaffold a new page component
+- `layout` – create a layout template
+- `service` – generate a service module
+- `style` – add a stylesheet file
+- `test` – create a test file
+- `context` – create a context module
+
+Run `cli --help` to see available generator commands.
+
+Use the `--ts` flag to scaffold TypeScript files instead of JavaScript:
+
+```bash
+cli generate:component Button --ts
+```
+
+### Version Bump
+
+```bash
+cli-bump
+```
+
+Supports:
+
+- Select bump type (patch, minor, major)
+- Git log + changelog preview
+- Optional GitHub push + npm publish
+- GitHub release notes preview
+- `--dry-run` support
+
+---
+
+## GitHub Release Automation
+
+To create a release on GitHub:
+
+```bash
+export GITHUB_TOKEN=ghp_YourTokenHere
+node scripts/release-to-github.js
+```
+
+---
+
+## Semantic Release via CI
+
+This project includes semantic-release support out of the box:
+
+- Automated changelog
+- GitHub Releases
+- npm publishing
+
+**Requirements:**
+
+- `NPM_TOKEN` in GitHub Actions secrets
+- `GITHUB_TOKEN` in GitHub Actions secrets
+
+---
 
 ## Security & Environment
 
@@ -211,9 +173,19 @@ my-cli --help
 - [ ] `.env` ignored by git
 - [ ] `OPENAI_API_KEY` only in local `.env` or CI secrets
 - [ ] `NODE_ENV=production` for production workflows
-- [ ] Dev‑only commands (`chat`, `mcp:*`, `rag:*`) blocked in prod
+- [ ] Dev-only commands (`chat`, `mcp:*`, `rag:*`) blocked in prod
 - [ ] CLI installed as devDependency in app repos
 - [ ] `.npmignore` / `export-ignore` exclude docs/examples/tests from npm
 - [ ] CI avoids printing secrets; no echoing keys
 - [ ] Allowed commands enforced for AI chat
 - [ ] Writes constrained to `./src` for generators
+
+---
+
+## License
+
+**MIT** — Customize and distribute freely under your own CLI brand.
+
+---
+
+## Built by [@greenarmor](https://github.com/greenarmor)
