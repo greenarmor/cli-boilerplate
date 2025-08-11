@@ -6,17 +6,21 @@
   "bin": {
     "@greenarmor/cli-boilerplate": "./scripts/create-cli.js",
     "cli": "./bin/index.js",
+    "boiler-cli": "./bin/index.js",
     "cli-bump": "./scripts/bump-cli.js",
     "cli-create": "./scripts/create-cli.js"
   },
   "scripts": {
     "start": "node ./bin/index.js",
     "changelog": "node scripts/generate-changelog.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "dev:check": "node scripts/check-secrets.js",
+    "chat": "NODE_ENV=development boiler-cli chat"
   },
   "dependencies": {
     "conventional-changelog-cli": "^5.0.0",
-    "inquirer": "^12.9.0"
+    "inquirer": "^12.9.0",
+    "dotenv": "^16.4.5"
   },
   "author": "Green <greenarmor@live.com>",
   "license": "MIT",
@@ -35,6 +39,16 @@
     "style",
     "test"
   ],
+  "files": ["bin/", "features/", "scripts/", "README.md", "LICENSE"],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "default": "./bin/index.js"
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "publishConfig": {
     "access": "public"
   },
