@@ -1,0 +1,6 @@
+# keep secrets & dev content out of npm tarball
+.env
+docs/
+examples/
+tests/
+.github/

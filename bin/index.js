@@ -37,6 +37,10 @@ const rootCommands = [
     'patch',
     'changelog',
     'completion',
+    'chat',
+    'mcp:serve',
+    'rag:index',
+    'rag:query',
     ...(pluginData.rootCommands || []),
   ]),
 ];
@@ -46,6 +50,18 @@ if (completionEnv.complete) {
 }
 
 const args = process.argv.slice(2);
+
+const command = args[0];
+const subcommand = args[1];
+
+// Guard dev-only commands when in production
+const isProd = process.env.NODE_ENV === 'production';
+const DEV_ONLY = new Set(['chat', 'mcp:serve', 'rag:index', 'rag:query']);
+
+if (DEV_ONLY.has(command) && isProd) {
+  console.error('This command is disabled in production. Run locally or in a dev/CI context.');
+  process.exit(1);
+}
 
 // Optional --framework flag override
 let frameworkOverride;
@@ -59,9 +75,6 @@ if (fwIndex !== -1) {
 const tsIndex = args.indexOf('--ts');
 const useTs = tsIndex !== -1;
 if (useTs) args.splice(tsIndex, 1);
-
-const command = args[0];
-const subcommand = args[1];
 
 // Completion install/uninstall
 if (command === 'completion') {
@@ -113,6 +126,13 @@ Examples:
   cli-bump
   cli changelog
 `);
+  process.exit(0);
+}
+
+// Dev-only AI chat command (lazy-loaded)
+if (command === 'chat') {
+  const { default: chat } = await import('../features/ai-chat/index.js');
+  await chat();
   process.exit(0);
 }
 
