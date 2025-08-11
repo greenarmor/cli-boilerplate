@@ -85,7 +85,7 @@ Usage:
 
 Commands:
   --help, -h                 Show this help message
-  cli completion             Install shell auto-completion
+  cli completion manual     Output bash completion script
   cli-bump                   Run interactive version bump (patch/minor/major)
   cli changelog              Generate/update CHANGELOG.md from conventional commits
   init-cli.js <name>         Bootstrap a new CLI project

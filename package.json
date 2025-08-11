@@ -16,8 +16,7 @@
   },
   "dependencies": {
     "conventional-changelog-cli": "^5.0.0",
-    "inquirer": "^12.9.0",
-    "tabtab": "^3.0.2"
+    "inquirer": "^12.9.0"
   },
   "author": "Green <greenarmor@live.com>",
   "license": "MIT",

@@ -106,19 +106,6 @@ Example:
 }
 ```
 
-
-### Shell Auto-Completion
-
-Enable tab-completion for commands, flags and patch files:
-
-```bash
-cli completion            # install completion for bash/zsh
-cli completion uninstall  # remove completion
-cli completion manual     # output simple bash completion script
-```
-
-After installation, restart your shell and type `cli ` followed by <kbd>Tab</kbd> to see suggestions.
-
 ### Testing
 
 Run the Jest test suite to verify generators and templates:

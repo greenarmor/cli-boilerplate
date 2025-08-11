@@ -1,68 +1,25 @@
-import fs from 'fs';
-import path from 'path';
-import tabtab from 'tabtab';
+// Auto-completion support has been removed. These stubs are kept so the rest of
+// the CLI can call the same functions without requiring the external `tabtab`
+// dependency.
 
-const flagSuggestions = ['--help', '-h', '--framework', '-f'];
-
-export function complete(env, commands) {
-  if (env.last && env.last.startsWith('-')) {
-    tabtab.log(flagSuggestions);
-    return;
-  }
-
-  if (env.words === 1) {
-    tabtab.log([
-      ...commands.map((c) => ({ name: c })),
-      ...flagSuggestions
-    ]);
-    return;
-  }
-
-  if (env.prev === 'patch') {
-    tabtab.log(['apply', 'list', 'clean']);
-    return;
-  }
-
-  if (env.prev === 'apply' && env.line.includes('patch')) {
-    const patchesDir = path.resolve(process.cwd(), 'patches');
-    if (fs.existsSync(patchesDir)) {
-      const files = fs.readdirSync(patchesDir).filter(f => f.endsWith('.patch'));
-      tabtab.log(files);
-    }
-    return;
-  }
-}
+// Previously powered by `tabtab`. Now a no-op to avoid breaking consumers that
+// might still attempt to trigger completion.
+export function complete() {}
 
 export async function install() {
-  try {
-    // Fallback to bash when SHELL is not defined (non-interactive environments)
-    if (!process.env.SHELL) {
-      process.env.SHELL = '/bin/bash';
-    }
-
-    // Use absolute path to current binary so completion works without global install
-    const completer = path.resolve(process.argv[1] || 'cli');
-    await tabtab.install({ name: 'cli', completer });
-    console.log('Auto-completion installed. Restart your shell.');
-  } catch (err) {
-    console.error('Error installing auto-completion:', err.message);
-  }
+  console.log(
+    'Auto-completion is no longer supported. Use `cli completion manual` for a simple bash script.'
+  );
 }
 
 export async function uninstall() {
-  try {
-    if (!process.env.SHELL) {
-      process.env.SHELL = '/bin/bash';
-    }
-    await tabtab.uninstall({ name: 'cli' });
-    console.log('Auto-completion uninstalled.');
-  } catch (err) {
-    console.error('Error uninstalling auto-completion:', err.message);
-  }
+  console.log('Auto-completion is no longer supported.');
 }
 
-export function parseEnv(env = process.env) {
-  return tabtab.parseEnv(env);
+// `tabtab.parseEnv` used to determine when completion should run. Without
+// `tabtab`, always return an object that disables completion.
+export function parseEnv() {
+  return { complete: false };
 }
 
 // Output a simple bash completion script for manual setup
