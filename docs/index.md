@@ -149,7 +149,7 @@ Chat with the CLI using natural language to run allowed generator commands.
 ```bash
 npm run chat
 # or
-boiler-cli chat
+cli chat
 ```
 
 Requires `OPENAI_API_KEY` in your local `.env` and is disabled when `NODE_ENV=production`.
