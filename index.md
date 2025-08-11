@@ -64,16 +64,15 @@ html.dark {
 
 [![GitHub Pages](https://img.shields.io/badge/docs-online-success?logo=github&style=flat-square)](https://greenarmor.github.io/cli-boilerplate)
 
-- A fully-featured starter boilerplate for building and publishing your own CLI tools using Node.js + npm.
-
-Use the prebuilt `cli` inside an existing web application, or rebrand this boilerplate to create your own CLI with extra automation tools. Rebranding aims to boost automation for web app development and is perfect for DevOps workflows.
+A fully-featured starter boilerplate for building and publishing your own CLI tools using Node.js + npm.
 
 ---
 
 ## Features
 
 - Publish-ready scoped CLI
-- `cli` global command
+- `cli` global command and modular generators
+- **AI chat command for natural-language scaffolding (dev-only)**
 - `cli-bump` version bump tool
 - `--dry-run` mode
 - Git commit + tag + push
@@ -81,135 +80,19 @@ Use the prebuilt `cli` inside an existing web application, or rebrand this boile
 - GitHub release note generation
 - GitHub Releases automation
 - Semantic release support
-- Banner, help menu, and badges
-- Ideal for open-source CLI products
-- Generators for components, pages, hooks, layouts, services, contexts, styles, and tests
+- Modular code generators for components, pages, hooks, layouts, services, contexts, styles, and tests
 - Framework detection with per-framework templates and a `--framework` override
-- Built-in templates for React, Vue, and Angular
 - Extensible through a plugin system
 - Optional TypeScript templates via `--ts`
 - Jest test suite for generators
+- Banner, help menu, and badges
+- Ideal for open-source CLI products
 - DevOps-friendly automation for releases and scaffolding
 
 ---
 
-## Generators
-
-Built-in scaffolding for:
-
-- Components
-- Pages
-- Hooks
-- Layouts
-- Services
-- Styles
-- Tests
-- Contexts
-
-### Framework-Aware Templates
-
-Generators automatically select templates based on your project's framework. The CLI inspects `package.json` for dependencies like React, Vue, or Angular and loads files from `templates/<framework>`. Override detection with the `--framework` flag:
-
-```bash
-cli generate:component Button --framework vue
-cli generate:service Api --framework angular
-```
-
-If no framework is detected, the generators fall back to `templates/default`.
-
-### Configuration
-
-Generators read their output paths from `cli.config.json` in your project root. Omit the file to use defaults. Example:
-
-```json
-{
-  "components": { "dir": "src/components/__NAME__", "file": "__NAME__.jsx" },
-  "hooks": { "dir": "src/hooks", "file": "use__NAME__.js" }
-  }
-  ```
-
-### TypeScript Templates
-
-Add the `--ts` flag to any generator to output `.ts` or `.tsx` files using TypeScript templates:
-
-```bash
-cli generate:component Button --ts
-```
-
-### Plugins
-
-Extend the CLI with plugins. List module paths or package names under `cli.plugins` in `package.json`. Each plugin can add `generateRoutes` or `rootCommands`.
-
-```json
-{
-  "cli": {
-    "plugins": ["./plugins/my-plugin.js"]
-  }
-}
-```
-
----
-
-## CLI Tooling
-
-### Version Bump
-
-```bash
-cli-bump
-```
-
-Supports:
-
-- Select bump type (patch, minor, major)
-- Git log + changelog preview
-- Optional GitHub push + npm publish
-- GitHub release notes preview
-- `--dry-run` support
-
-### Testing
-
-Run the Jest test suite to verify generators and templates:
-
-```bash
-npm test
-```
-
----
-
-## GitHub Release Automation
-
-To create a release on GitHub:
-
-```bash
-export GITHUB_TOKEN=ghp_YourTokenHere
-node scripts/release-to-github.js
-```
-
----
-
-## Semantic Release via CI
-
-This project includes semantic-release support out of the box:
-
-- Automated changelog
-- GitHub Releases
-- npm publishing
-
-**Requirements:**
-
-- `NPM_TOKEN` in GitHub Actions secrets
-- `GITHUB_TOKEN` in GitHub Actions secrets
-
----
-
-## License
-
-**MIT** — Customize and distribute freely under your own CLI brand.
-
----
-
 ## Quick Start
- 
+
 Choose the workflow that fits your needs.
 
 ### Use `cli` in an existing project
@@ -231,7 +114,7 @@ git config --global user.name "your_github_username"
 git config --global user.email "your_email@example.com"
 ```
 
-2. Scaffold a new CLI, ready to receive more automation tools:
+2. Scaffold a new CLI:
 
 ```bash
 npx @greenarmor/cli-boilerplate my-cli
@@ -257,4 +140,76 @@ my-cli --help
 
 ---
 
+## CLI Tooling
+
+### AI Chat (dev only)
+
+Chat with the CLI using natural language to run allowed generator commands.
+
+```bash
+npm run chat
+# or
+boiler-cli chat
+```
+
+Requires `OPENAI_API_KEY` in your local `.env` and is disabled when `NODE_ENV=production`.
+
+### Generators
+
+```bash
+cli generate:component Button
+cli generate:hook useAuth
+cli generate:context Auth
+```
+
+Other supported generators:
+
+- `page`
+- `layout`
+- `service`
+- `style`
+- `test`
+- `context`
+
+Use the `--ts` flag to scaffold TypeScript files.
+
+### Version Bump
+
+```bash
+cli-bump
+```
+
+Supports patch/minor/major, changelog preview, optional push + publish, and `--dry-run`.
+
+---
+
+## GitHub Release Automation
+
+```bash
+export GITHUB_TOKEN=ghp_YourTokenHere
+node scripts/release-to-github.js
+```
+
+---
+
+## Semantic Release via CI
+
+- Automated changelog
+- GitHub Releases
+- npm publishing
+
+**Requirements:**
+
+- `NPM_TOKEN` in GitHub Actions secrets
+- `GITHUB_TOKEN` in GitHub Actions secrets
+
+---
+
+## License
+
+**MIT** — Customize and distribute freely under your own CLI brand.
+
+---
+
 ## Built by [@greenarmor](https://github.com/greenarmor)
+
