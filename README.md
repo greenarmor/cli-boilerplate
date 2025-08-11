@@ -198,3 +198,22 @@ my-cli --help
 ---
 
 ## Built by [@greenarmor](https://github.com/greenarmor)
+
+## Security & Environment
+
+- This CLI is a **development tool**. Install as a devDependency and do **not** import it in app runtime.
+- Add secrets locally in `.env` (never commit). Copy from `.env.example`.
+- AI chat / RAG / MCP commands are disabled when `NODE_ENV=production`.
+- CI uses GitHub **Secrets** (Settings → Secrets and variables → Actions).
+
+### Deployment Safety Checklist
+
+- [ ] `.env` ignored by git
+- [ ] `OPENAI_API_KEY` only in local `.env` or CI secrets
+- [ ] `NODE_ENV=production` for production workflows
+- [ ] Dev‑only commands (`chat`, `mcp:*`, `rag:*`) blocked in prod
+- [ ] CLI installed as devDependency in app repos
+- [ ] `.npmignore` / `export-ignore` exclude docs/examples/tests from npm
+- [ ] CI avoids printing secrets; no echoing keys
+- [ ] Allowed commands enforced for AI chat
+- [ ] Writes constrained to `./src` for generators
