@@ -124,6 +124,16 @@ Use the `--ts` flag to scaffold TypeScript files instead of JavaScript:
 cli generate:component Button --ts
 ```
 
+### Security Scanning
+
+Define scanners under `cli.scanners` in `package.json` or provide defaults in `.cli-scannersrc`.
+
+```bash
+cli scan --scanner npm
+```
+
+Use `--scanner <name>` to select a registered scanner at runtime.
+
 ### Version Bump
 
 ```bash

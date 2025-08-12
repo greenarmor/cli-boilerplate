@@ -1,5 +1,7 @@
 import fs from 'fs';
 import path from 'path';
+import loadScanners from '../utils/scanner-loader.js';
+import loadScanConfig from '../utils/load-scan-config.js';
 
 const LEVELS = ['info', 'low', 'moderate', 'high', 'critical'];
 
@@ -29,17 +31,16 @@ function normalizeSeverity(level = '') {
 }
 
 export default async function runScan(argv = []) {
-  const options = parseArgs(argv);
+  const defaults = loadScanConfig();
+  const options = { ...defaults, ...parseArgs(argv) };
+  const scanners = await loadScanners();
   const target = options.target || '.';
-  const scannerName = options.scanner || 'npm';
+  const scannerName = options.scanner || Object.keys(scanners)[0] || 'npm';
   const report = options.report ? path.resolve(options.report) : null;
   const severity = options.severity || 'high';
 
-  let scannerFn;
-  try {
-    const mod = await import(`../scanners/${scannerName}.js`);
-    scannerFn = mod.default || mod;
-  } catch {
+  const scannerFn = scanners[scannerName];
+  if (!scannerFn) {
     console.error(`Unsupported scanner: ${scannerName}`);
     return 1;
   }
