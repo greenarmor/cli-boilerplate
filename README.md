@@ -92,7 +92,12 @@ npm run chat
 cli chat
 ```
 
-Requires `OPENAI_API_KEY` in your local `.env` and is disabled when `NODE_ENV=production`.
+Requires `OPENAI_API_KEY` in your environment. Put the key in a `.env` or export it globally:
+
+- **macOS/Linux:** `echo 'export OPENAI_API_KEY="sk-..."' >> ~/.bashrc && source ~/.bashrc`
+- **Windows:** `setx OPENAI_API_KEY "sk-..."`
+
+`NODE_ENV=production` disables chat mode.
 
 ### Generators
 
