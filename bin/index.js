@@ -114,18 +114,21 @@ Generate Commands:
   generate:test <name>       Create new test
   generate:context <name>    Create new context
 
-Patch Commands:
-  patch list                 List available patches in /patches
-  patch apply <file.patch>   Apply a patch from /patches
-  patch clean                Delete all patches in /patches (keeps README.md)
+ Patch Commands:
+   patch list                 List available patches in /patches
+   patch apply <file.patch>   Apply a patch from /patches
+   patch clean                Delete all patches in /patches (keeps README.md)
 
-Examples:
-  cli generate:component MyButton
-  cli generate:component MyButton --ts
-  cli patch list
-  cli patch apply readme-fix.patch
-  cli-bump
-  cli changelog
+  Scan Command:
+    scan [--scanner <name>] [--target <path|url>]   Run a registered scanner
+
+  Examples:
+    cli generate:component MyButton
+    cli generate:component MyButton --ts
+    cli patch list
+    cli patch apply readme-fix.patch
+    cli-bump
+    cli changelog
 `);
   process.exit(0);
 }

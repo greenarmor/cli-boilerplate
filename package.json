@@ -69,6 +69,15 @@
       "/templates/"
     ]
   },
+  "cli": {
+    "scanners": {
+      "npm": "./scripts/scanners/npm.js",
+      "zap": "./scripts/scanners/zap.js"
+    }
+  },
+  "scan": {
+    "target": "."
+  },
   "devDependencies": {
     "jest": "^29.7.0"
   }
