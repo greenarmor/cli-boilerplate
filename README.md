@@ -126,13 +126,61 @@ cli generate:component Button --ts
 
 ### Security Scanning
 
-Define scanners under `cli.scanners` in `package.json` or provide defaults in `.cli-scannersrc`.
+The `cli scan` command runs pluggable security tools. Register scanners under
+`cli.scanners` in `package.json` or provide defaults in a `.cli-scannersrc`
+file.
+
+**Install required scanners first:**
+
+- **npm** – uses `npm audit` to inspect dependencies. Requires Node.js and npm
+  (v7+) in your `PATH`.
+- **OWASP ZAP** – dynamic application testing via `zap-baseline.py` or
+  `zap.sh`. [Download ZAP](https://www.zaproxy.org/download/) or install with a
+  package manager (`brew install zaproxy`) or Docker.
+
+### `cli scan` usage
+
+Run a registered scanner against a project directory or URL:
 
 ```bash
-cli scan --scanner npm
+# run npm audit on the current project
+cli scan --scanner npm --target .
+
+# run OWASP ZAP against a URL, save an HTML report, and only show high issues
+cli scan --scanner zap --target https://example.com \
+  --report zap-report.html --severity high
 ```
 
-Use `--scanner <name>` to select a registered scanner at runtime.
+Use `--report <file>` to write findings to a JSON or HTML report. The
+`--severity <level>` flag filters results below the threshold (`info`, `low`,
+`moderate`, `high`, `critical`).
+
+Configure defaults or pass arguments per scanner in your project:
+
+```jsonc
+{
+  "cli": {
+    "scanners": {
+      "npm": "./scripts/scanners/npm.js",
+      "zap": "./scripts/scanners/zap.js"
+    }
+  },
+  "scan": {
+    "severity": "moderate",
+    "zap": { "args": ["-r", "zap-report.html"] }
+  }
+}
+```
+
+#### CI/CD integration & security best practices
+
+Include `cli scan` in CI pipelines to fail builds on severe vulnerabilities:
+
+```bash
+cli scan --scanner npm --severity high
+```
+
+Always scan only systems you own or have explicit permission to test.
 
 ### Version Bump
 
