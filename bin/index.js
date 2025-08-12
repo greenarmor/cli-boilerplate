@@ -36,6 +36,7 @@ const rootCommands = [
     ...Object.keys(generateRoutes),
     'patch',
     'changelog',
+    'scan',
     'completion',
     'chat',
     'mcp:serve',
@@ -165,6 +166,13 @@ if (command && command.startsWith('generate:')) {
   }
 
   process.exit(0);
+}
+
+// ── Scan Command ─────────────────────────────────────────────────────────────
+if (command === 'scan') {
+  const { default: runScan } = await import('../scripts/commands/scan.js');
+  const exitCode = await runScan(args.slice(1));
+  process.exit(exitCode);
 }
 
 // ── Patch Command Router ─────────────────────────────────────────────────────
