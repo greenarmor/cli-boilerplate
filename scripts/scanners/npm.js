@@ -4,7 +4,7 @@ import { spawnSync } from 'child_process';
  * Run npm audit and return standardized findings.
  * @param {string} target - Path to scan.
  * @param {object} [opts]
- * @returns {{raw: object, findings: Array<{url:string, description:string, severity:string}>}}
+ * @returns {{raw: object, findings: Array<{url:string, description:string, severity:string, remediation?:string}>}}
  */
 export default function npmScanner(target = '.', opts = {}) {
   const result = spawnSync('npm', ['audit', '--json'], {
@@ -31,6 +31,7 @@ export default function npmScanner(target = '.', opts = {}) {
         url: adv.url || '',
         description: adv.title || adv.module_name || '',
         severity: (adv.severity || '').toLowerCase(),
+        remediation: adv.recommendation || '',
       });
     }
   } else if (data.vulnerabilities) {
@@ -38,10 +39,19 @@ export default function npmScanner(target = '.', opts = {}) {
       if (Array.isArray(info.via)) {
         for (const via of info.via) {
           if (typeof via === 'object') {
+            let remediation = '';
+            if (via.fixAvailable) {
+              if (typeof via.fixAvailable === 'object') {
+                remediation = `Update to ${via.fixAvailable.version}`;
+              } else {
+                remediation = 'Run npm audit fix';
+              }
+            }
             findings.push({
               url: via.url || '',
               description: via.title || pkg,
               severity: (via.severity || '').toLowerCase(),
+              remediation,
             });
           }
         }

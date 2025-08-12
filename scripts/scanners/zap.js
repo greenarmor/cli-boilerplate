@@ -6,7 +6,7 @@ import { spawnSync } from 'child_process';
  * @param {object} [opts]
  * @param {string} [opts.zapPath] - Path to zap-baseline.py or zap.sh command.
  * @param {string[]} [opts.args] - Additional command line arguments.
- * @returns {{raw: object, findings: Array<{url:string, description:string, severity:string}>}}
+ * @returns {{raw: object, findings: Array<{url:string, description:string, severity:string, remediation?:string}>}}
  */
 export default function zapScanner(target, opts = {}) {
   const zapCmd = opts.zapPath || 'zap-baseline.py';
@@ -38,12 +38,14 @@ export default function zapScanner(target, opts = {}) {
       const description = alert.name || alert.alert || '';
       const severityRaw = (alert.riskdesc || alert.risk || '').split(' ')[0];
       const severity = severityRaw ? severityRaw.toLowerCase() : '';
+      const remediation = alert.solution || '';
       const instances = alert.instances || [];
       if (instances.length === 0) {
         findings.push({
           url: site['@name'] || target,
           description,
           severity,
+          remediation,
         });
       } else {
         for (const inst of instances) {
@@ -51,6 +53,7 @@ export default function zapScanner(target, opts = {}) {
             url: inst.uri || inst.url || site['@name'] || target,
             description,
             severity,
+            remediation,
           });
         }
       }
