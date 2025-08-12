@@ -185,7 +185,3 @@ This project includes semantic-release support out of the box:
 ## License
 
 **MIT** — Customize and distribute freely under your own CLI brand.
-
----
-
-## Built by [@greenarmor](https://github.com/greenarmor)
