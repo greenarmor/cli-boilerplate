@@ -1,8 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { spawnSync } from 'child_process';
 
-const LEVELS = ['low', 'moderate', 'high', 'critical'];
+const LEVELS = ['info', 'low', 'moderate', 'high', 'critical'];
 
 function parseArgs(args = []) {
   const opts = {};
@@ -22,49 +21,52 @@ function parseArgs(args = []) {
   return opts;
 }
 
-export default function runScan(argv = []) {
+function normalizeSeverity(level = '') {
+  const l = level.toLowerCase();
+  if (l === 'medium') return 'moderate';
+  if (l === 'informational' || l === 'info') return 'info';
+  return l;
+}
+
+export default async function runScan(argv = []) {
   const options = parseArgs(argv);
   const target = options.target || '.';
-  const scanner = options.scanner || 'npm';
+  const scannerName = options.scanner || 'npm';
   const report = options.report ? path.resolve(options.report) : null;
   const severity = options.severity || 'high';
 
-  if (scanner !== 'npm') {
-    console.error(`Unsupported scanner: ${scanner}`);
-    return 1;
-  }
-
-  const result = spawnSync('npm', ['audit', '--json'], {
-    cwd: target,
-    encoding: 'utf8',
-  });
-
-  if (result.error) {
-    console.error('Failed to run npm audit:', result.error.message);
-    return result.status || 1;
-  }
-
-  let data;
+  let scannerFn;
   try {
-    data = JSON.parse(result.stdout);
-  } catch (err) {
-    console.error('Unable to parse scanner output');
+    const mod = await import(`../scanners/${scannerName}.js`);
+    scannerFn = mod.default || mod;
+  } catch {
+    console.error(`Unsupported scanner: ${scannerName}`);
     return 1;
   }
+
+  let results;
+  try {
+    results = await scannerFn(target, options);
+  } catch (err) {
+    console.error(`Failed to run ${scannerName} scanner: ${err.message}`);
+    return 1;
+  }
+
+  const findings = results.findings || [];
+  const raw = results.raw || findings;
 
   if (report) {
-    fs.writeFileSync(report, JSON.stringify(data, null, 2));
+    fs.writeFileSync(report, JSON.stringify(raw, null, 2));
     console.log(`Report written to ${report}`);
   }
 
-  const vulns = data.metadata?.vulnerabilities || {};
-  const thresholdIdx = LEVELS.indexOf(severity);
+  const thresholdIdx = LEVELS.indexOf(normalizeSeverity(severity));
   const highIdx = LEVELS.indexOf('high');
   let exitCode = 0;
 
-  for (const level of LEVELS) {
-    const idx = LEVELS.indexOf(level);
-    if ((vulns[level] || 0) > 0 && (idx >= thresholdIdx || idx >= highIdx)) {
+  for (const finding of findings) {
+    const idx = LEVELS.indexOf(normalizeSeverity(finding.severity));
+    if (idx >= thresholdIdx || idx >= highIdx) {
       exitCode = 1;
       break;
     }
