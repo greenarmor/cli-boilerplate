@@ -7,7 +7,7 @@ import { ALLOWED } from './allowlist.js';
 import path from 'path';
 import fs from 'fs';
 
-export default async function chat() {
+export default function chat() {
   if (process.env.NODE_ENV === 'production') {
     console.error('AI chat is disabled in production.');
     process.exit(1);
@@ -19,14 +19,15 @@ export default async function chat() {
     process.exit(1);
   }
 
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout, prompt: 'AI> ' });
-  console.log('Chat ready. Type instructions (e.g., "generate a context for auth"). Type "exit" to quit.');
-  rl.prompt();
+  return new Promise((resolve) => {
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout, prompt: 'AI> ' });
+    console.log('Chat ready. Type instructions (e.g., "generate a context for auth"). Type "exit" to quit.');
+    rl.prompt();
 
-  rl.on('line', async (line) => {
-    const input = (line || '').trim();
-    if (!input) return rl.prompt();
-    if (input.toLowerCase() === 'exit') { rl.close(); return; }
+    rl.on('line', async (line) => {
+      const input = (line || '').trim();
+      if (!input) return rl.prompt();
+      if (input.toLowerCase() === 'exit') { rl.close(); return; }
 
     try {
       // 1) Get intent from AI (stubbed here; wire to your LLM):
@@ -87,6 +88,7 @@ export default async function chat() {
     rl.prompt();
   }).on('close', () => {
     console.log('Bye.');
-    process.exit(0);
+    resolve();
+  });
   });
 }
