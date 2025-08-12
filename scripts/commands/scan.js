@@ -1,9 +1,7 @@
-import fs from 'fs';
 import path from 'path';
 import loadScanners from '../utils/scanner-loader.js';
 import loadScanConfig from '../utils/load-scan-config.js';
-
-const LEVELS = ['info', 'low', 'moderate', 'high', 'critical'];
+import scanReport from '../utils/scan-report.js';
 
 function parseArgs(args = []) {
   const opts = {};
@@ -54,29 +52,23 @@ export default async function runScan(argv = []) {
   }
 
   const findings = results.findings || [];
-  const raw = results.raw || findings;
 
-  if (report) {
-    fs.writeFileSync(report, JSON.stringify(raw, null, 2));
-    console.log(`Report written to ${report}`);
-  }
+  const filtered = scanReport(findings, { report, severity });
 
-  const thresholdIdx = LEVELS.indexOf(normalizeSeverity(severity));
-  const highIdx = LEVELS.indexOf('high');
-  let exitCode = 0;
-
-  for (const finding of findings) {
-    const idx = LEVELS.indexOf(normalizeSeverity(finding.severity));
-    if (idx >= thresholdIdx || idx >= highIdx) {
-      exitCode = 1;
-      break;
-    }
-  }
+  const exitCode = filtered.length > 0 ? 1 : 0;
 
   if (exitCode !== 0) {
-    console.error('High severity vulnerabilities detected.');
+    console.error(
+      `${filtered.length} vulnerabilities of severity ${normalizeSeverity(
+        severity
+      )} or higher detected.`
+    );
   } else {
-    console.log('No high severity vulnerabilities found.');
+    console.log(
+      `No vulnerabilities of severity ${normalizeSeverity(
+        severity
+      )} or higher found.`
+    );
   }
 
   return exitCode;
