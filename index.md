@@ -180,11 +180,13 @@ Use the `--ts` flag to scaffold TypeScript files.
 
 ### Security Scanning
 
-The `cli scan` command runs pluggable security tools. Register scanners under
-`cli.scanners` in `package.json` or provide defaults in a `.cli-scannersrc`
-file.
+Run `cli scan:init` to generate a `.cli-scannersrc` file with sample scanner
+definitions.
 
-**Install required scanners first:**
+The `cli scan` command runs pluggable security tools. Register scanners under
+`cli.scanners` in `package.json` or provide defaults in `.cli-scannersrc`.
+
+**Install required scanners first (ZAP is not bundled):**
 
 - **npm** – uses `npm audit` to inspect dependencies. Requires Node.js and npm
   (v7+) in your `PATH`.
