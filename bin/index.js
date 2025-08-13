@@ -37,6 +37,7 @@ const rootCommands = [
     'patch',
     'changelog',
     'scan',
+    'scan:init',
     'completion',
     'chat',
     'mcp:serve',
@@ -120,6 +121,7 @@ Generate Commands:
    patch clean                Delete all patches in /patches (keeps README.md)
 
   Scan Command:
+    scan:init                Create .cli-scannersrc with sample scanners
     scan [--scanner <name>] [--target <path|url>]   Run a registered scanner
 
   Examples:
@@ -168,6 +170,13 @@ if (command && command.startsWith('generate:')) {
     process.exit(1);
   }
 
+  process.exit(0);
+}
+
+// ── Scan Init Command ─────────────────────────────────────────────────────────
+if (command === 'scan:init') {
+  const { default: initScan } = await import('../scripts/commands/scan-init.js');
+  initScan();
   process.exit(0);
 }
 
