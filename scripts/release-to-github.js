@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 
 import { execSync } from 'child_process';
-import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const token = process.env.GITHUB_TOKEN;
 if (!token) {
@@ -17,7 +20,8 @@ const ownerRepo = execSync('git config --get remote.origin.url', { encoding: 'ut
 
 console.log(`Creating GitHub Release for ${tag} in ${ownerRepo}`);
 
-const notes = execSync('npx conventional-changelog -p angular -u -r 1', { encoding: 'utf8' });
+const changelogCli = path.resolve(__dirname, '../node_modules/conventional-changelog-cli/cli.js');
+const notes = execSync(`node ${changelogCli} -p angular -u -r 1`, { encoding: 'utf8' });
 
 const payload = {
   tag_name: tag,

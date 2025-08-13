@@ -3,6 +3,11 @@
 import inquirer from 'inquirer';
 import { execSync } from 'child_process';
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
@@ -36,7 +41,8 @@ try {
 
 console.log(`\nGitHub Release Notes (generated):\n`);
 try {
-  const releaseNotes = execSync('npx conventional-changelog -p angular -u -r 1', { encoding: 'utf8' });
+  const changelogCli = path.resolve(__dirname, '../node_modules/conventional-changelog-cli/cli.js');
+  const releaseNotes = execSync(`node ${changelogCli} -p angular -u -r 1`, { encoding: 'utf8' });
   console.log(releaseNotes || 'No generated release notes.');
 } catch (err) {
   console.warn('Failed to generate GitHub release notes.');
