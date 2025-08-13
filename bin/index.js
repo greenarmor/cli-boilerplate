@@ -104,6 +104,10 @@ Commands:
   cli-bump                   Run interactive version bump (patch/minor/major)
   cli changelog              Generate/update CHANGELOG.md from conventional commits
   init-cli.js <name>         Bootstrap a new CLI project
+  scan:init                  Create .cli-scannersrc with sample scanners
+  scan [--scanner <name>] [--target <path|url>] [--severity <level>] [--report <file>]
+                             Run a registered scanner
+  chat                       Start interactive AI assistant (requires OPENAI_API_KEY, dev only)
 
 Generate Commands:
   generate:component <name>  Create new component
@@ -120,11 +124,9 @@ Generate Commands:
    patch apply <file.patch>   Apply a patch from /patches
    patch clean                Delete all patches in /patches (keeps README.md)
 
-  Scan Command:
-    scan:init                Create .cli-scannersrc with sample scanners
-    scan [--scanner <name>] [--target <path|url>]   Run a registered scanner
-
   Examples:
+    cli scan --scanner npm --target .
+    NODE_ENV=development cli chat
     cli generate:component MyButton
     cli generate:component MyButton --ts
     cli patch list
