@@ -7,8 +7,8 @@ export default function scanInit(cwd = process.cwd()) {
     const sample = {
       cli: {
         scanners: {
-          npm: './scripts/scanners/npm.js',
-          zap: './scripts/scanners/zap.js',
+          npm: '@greenarmor/cli-boilerplate/scripts/scanners/npm.js',
+          zap: '@greenarmor/cli-boilerplate/scripts/scanners/zap.js',
         },
       },
     };
