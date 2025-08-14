@@ -12,16 +12,18 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      # ✅ Step 1 — PREP VARS (robust defaults so Discord never sees an empty message)
+      # ✅ Step 1 — Prepare variables (robust defaults)
       - name: Prepare Discord payload vars
         id: prep
         shell: bash
         run: |
+          set -euo pipefail
+
           REPO="${{ github.repository }}"
           ACTOR="${{ github.actor }}"
           AVATAR="https://github.com/${ACTOR}.png"
 
-          # Push-only context
+          # Push context
           REF="${{ github.ref_name }}"
           BEFORE="${{ github.event.before }}"
           AFTER="${{ github.sha }}"
@@ -35,17 +37,25 @@ jobs:
             join("\n")
           ' <<< "$COMMITS_JSON")
 
-          # Non-empty fallbacks
           TITLE="Push to ${REF}"
           URL="$COMPARE_URL"
-          DESCRIPTION="**${COUNT}** commit(s) pushed by **${ACTOR}**\n\n${COMMITS_MD}"
+          DESCRIPTION="**${COUNT}** commit(s) pushed by **${ACTOR}**"
+          if [ -n "$COMMITS_MD" ] && [ "$COMMITS_MD" != "null" ]; then
+            DESCRIPTION="${DESCRIPTION}\n\n${COMMITS_MD}"
+          fi
           CONTENT="Push to ${REF} by ${ACTOR}"
           COLOR=3066993
           TS="${{ github.event.head_commit.timestamp || github.event.repository.pushed_at || github.run_started_at }}"
 
-          # When GitHub can’t supply commits (edge/manual cases), still send something
-          if [ -z "$COMMITS_MD" ] || [ "$COMMITS_MD" = "null" ]; then
-            DESCRIPTION="Update on **${REPO}** by **${ACTOR}**"
+          # Final fallbacks to avoid empty message
+          if [ -z "${CONTENT:-}" ]; then
+            CONTENT="Repository update on ${REPO} by ${ACTOR}"
+          fi
+          if [ -z "${DESCRIPTION:-}" ]; then
+            DESCRIPTION="Repository update on **${REPO}** by **${ACTOR}**"
+          fi
+          if [ -z "${URL:-}" ]; then
+            URL="${{ github.server_url }}/${REPO}"
           fi
 
           {
@@ -60,7 +70,7 @@ jobs:
             echo "repo=$REPO"
           } >> "$GITHUB_OUTPUT"
 
-      # ✅ Step 2 — SEND TO DISCORD
+      # ✅ Step 2 — Send to Discord
       - name: Send to Discord
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
@@ -74,7 +84,8 @@ jobs:
           REPO: ${{ steps.prep.outputs.repo }}
           TS: ${{ steps.prep.outputs.timestamp }}
         run: |
-          if [ -z "$WEBHOOK" ]; then
+          set -euo pipefail
+          if [ -z "${WEBHOOK:-}" ]; then
             echo "::error::Missing secret DISCORD_WEBHOOK"; exit 1;
           fi
 
@@ -89,7 +100,7 @@ jobs:
             --arg ts "$TS" \
             --argjson color "$COLOR" \
             '{
-              "content": $content,                      # guaranteed non-empty
+              "content": $content,
               "embeds": [{
                 "title": $title,
                 "description": $description,
@@ -102,9 +113,9 @@ jobs:
               "allowed_mentions": { "parse": [] }
             }' > payload.json
 
-          # Optional: show payload (safe; no secrets)
-          echo "--- Discord payload ---"; cat payload.json; echo "---------------------"
+          echo "--- Discord payload ---"
+          cat payload.json
+          echo "-----------------------"
 
           curl -sS -X POST -H "Content-Type: application/json" \
-            -d @payload.json "$WEBHOOK" \
-            || (echo "::error::Failed to post to Discord" && exit 1)
+            -d @payload.json "$WEBHOOK"
