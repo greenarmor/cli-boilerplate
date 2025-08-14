@@ -13,7 +13,7 @@ Use the prebuilt `cli` inside an existing web application, or rebrand this boile
 - Publish-ready scoped CLI
 - `cli` global command and modular generators
 - **AI chat command for natural-language scaffolding (dev-only)**
-- `cli-bump` version bump tool
+- `cli bump` version bump tool
 - `--dry-run` mode
 - Git commit + tag + push
 - Optional `npm publish`
@@ -187,7 +187,7 @@ Always scan only systems you own or have explicit permission to test.
 ### Version Bump
 
 ```bash
-cli-bump
+cli bump [-u] [-r <count>]
 ```
 
 Supports:
@@ -195,7 +195,7 @@ Supports:
 - Select bump type (patch, minor, major)
 - Git log + changelog preview
 - Optional GitHub push + npm publish
-- GitHub release notes preview
+- GitHub release notes preview (`-u` for Unreleased heading)
 - `--dry-run` support
 
 ---

@@ -11,6 +11,15 @@ const __dirname = path.dirname(__filename);
 
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
+const unreleased = args.includes('-u') || args.includes('--unreleased');
+let releaseCount = 1;
+const rIndex = args.findIndex((a) => a === '-r' || a === '--release-count');
+if (rIndex !== -1) {
+  const val = args[rIndex + 1];
+  if (val && !val.startsWith('-')) {
+    releaseCount = val;
+  }
+}
 
 const bumpOptions = ['patch', 'minor', 'major'];
 
@@ -42,7 +51,9 @@ try {
 console.log(`\nGitHub Release Notes (generated):\n`);
 try {
   const changelogCli = path.resolve(__dirname, '../node_modules/conventional-changelog-cli/cli.js');
-  const releaseNotes = execSync(`node ${changelogCli} -p angular -u -r 1`, { encoding: 'utf8' });
+  const flags = [`-p angular`, `-r ${releaseCount}`];
+  if (unreleased) flags.push('-u');
+  const releaseNotes = execSync(`node ${changelogCli} ${flags.join(' ')}`, { encoding: 'utf8' });
   console.log(releaseNotes || 'No generated release notes.');
 } catch (err) {
   console.warn('Failed to generate GitHub release notes.');
