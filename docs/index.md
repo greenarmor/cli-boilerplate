@@ -73,7 +73,7 @@ A fully-featured starter boilerplate for building and publishing your own CLI to
 - Publish-ready scoped CLI
 - `cli` global command and modular generators
 - **AI chat command for natural-language scaffolding (dev-only)**
-- `cli-bump` version bump tool
+- `cli bump` version bump tool
 - `--dry-run` mode
 - Git commit + tag + push
 - Optional `npm publish`
@@ -241,10 +241,10 @@ Always scan only systems you own or have explicit permission to test.
 ### Version Bump
 
 ```bash
-cli-bump
+cli bump [-u] [-r <count>]
 ```
 
-Supports patch/minor/major, changelog preview, optional push + publish, and `--dry-run`.
+Supports patch/minor/major, changelog preview, optional push + publish, `-u` for Unreleased notes, and `--dry-run`.
 
 ---
 

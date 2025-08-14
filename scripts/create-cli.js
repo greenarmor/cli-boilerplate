@@ -38,7 +38,6 @@ filesToEdit.forEach(file => {
   content = content
     .replace(/@greenarmor\/cli-boilerplate/g, `@your-scope/${projectName}`)
     .replace(/cli-boilerplate/g, projectName)
-    .replace(/cli-bump/g, `${projectName}-bump`)
     // Avoid replacing dependency names like conventional-changelog-cli
     .replace(/(?<!changelog-)\bcli\b/g, projectName);
   fs.writeFileSync(file, content);

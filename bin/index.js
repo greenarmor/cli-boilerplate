@@ -35,6 +35,7 @@ const rootCommands = [
   ...new Set([
     ...Object.keys(generateRoutes),
     'patch',
+    'bump',
     'changelog',
     'scan',
     'scan:init',
@@ -101,7 +102,7 @@ Usage:
 Commands:
   --help, -h                 Show this help message
   cli completion manual     Output bash completion script
-  cli-bump                   Run interactive version bump (patch/minor/major)
+  cli bump                   Run interactive version bump (patch/minor/major)
   cli changelog              Generate/update CHANGELOG.md from conventional commits
   init-cli.js <name>         Bootstrap a new CLI project
   scan:init                  Create .cli-scannersrc with sample scanners
@@ -131,7 +132,7 @@ Generate Commands:
     cli generate:component MyButton --ts
     cli patch list
     cli patch apply readme-fix.patch
-    cli-bump
+    cli bump
     cli changelog
 `);
   process.exit(0);
@@ -201,6 +202,13 @@ if (command === 'patch') {
 
   handlePatchCommand(patchCmd, patchFile);
   process.exit(0);
+}
+
+// ── Bump Command ──────────────────────────────────────────────────────────────
+if (command === 'bump') {
+  const scriptPath = path.resolve(__dirname, '../scripts/bump-cli.js');
+  const result = spawnSync('node', [scriptPath, ...args.slice(1)], { stdio: 'inherit' });
+  process.exit(result.status ?? 0);
 }
 
 // ── Changelog Command ────────────────────────────────────────────────────────
