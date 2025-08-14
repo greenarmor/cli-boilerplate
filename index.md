@@ -241,10 +241,10 @@ Always scan only systems you own or have explicit permission to test.
 ### Version Bump
 
 ```bash
-cli bump [-u] [-r <count>]
+cli bump [--github-release] [-u] [-r <count>]
 ```
 
-Supports patch/minor/major, changelog preview, optional push + publish, `-u` for Unreleased notes, and `--dry-run`.
+Supports patch/minor/major, changelog preview, optional push + publish, `-u` for Unreleased notes, `--github-release` to create a GitHub release (requires `GITHUB_TOKEN`), and `--dry-run`.
 
 ---
 
@@ -252,6 +252,12 @@ Supports patch/minor/major, changelog preview, optional push + publish, `-u` for
 
 ```bash
 export GITHUB_TOKEN=ghp_YourTokenHere
+cli bump --github-release
+```
+
+Runs `scripts/release-to-github.js` after pushing tags. You can also invoke the script directly:
+
+```bash
 node scripts/release-to-github.js
 ```
 
