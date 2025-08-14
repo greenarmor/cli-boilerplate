@@ -1,4 +1,4 @@
-name: Notify Discord
+name: Notify Discord (main pushes)
 
 permissions:
   contents: read
@@ -6,99 +6,62 @@ permissions:
 on:
   push:
     branches: [ main ]
-  pull_request:
-    types: [closed]
-  release:
-    types: [published]
   workflow_dispatch:
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
+      # ✅ Step 1 — PREP VARS (robust defaults so Discord never sees an empty message)
       - name: Prepare Discord payload vars
         id: prep
         shell: bash
         run: |
-          EVENT="${{ github.event_name }}"
           REPO="${{ github.repository }}"
           ACTOR="${{ github.actor }}"
           AVATAR="https://github.com/${ACTOR}.png"
 
-          # Defaults
-          TITLE="Repository update on ${REPO}"
-          URL="${{ github.server_url }}/${REPO}"
-          COLOR=5814783
-          DESCRIPTION=""
-          CONTENT=""
+          # Push-only context
+          REF="${{ github.ref_name }}"
+          BEFORE="${{ github.event.before }}"
+          AFTER="${{ github.sha }}"
+          COMPARE_URL="${{ github.server_url }}/${REPO}/compare/${BEFORE}...${AFTER}"
 
-          if [ "$EVENT" = "push" ]; then
-            REF="${{ github.ref_name }}"
-            BEFORE="${{ github.event.before }}"
-            AFTER="${{ github.sha }}"
-            COMPARE_URL="${{ github.server_url }}/${REPO}/compare/${BEFORE}...${AFTER}"
+          COMMITS_JSON='${{ toJson(github.event.commits) }}'
+          COUNT=$(jq 'length' <<< "$COMMITS_JSON")
+          COMMITS_MD=$(jq -r '
+            (.[0:10] // []) |
+            map("- [`\(.id[0:7])`](\(.url)) \(.message | gsub("\r?\n$";""))") |
+            join("\n")
+          ' <<< "$COMMITS_JSON")
 
-            # Build up to 5 commit lines: - [`abcd123`](url) message
-            COMMITS_JSON='${{ toJson(github.event.commits) }}'
-            COMMITS_MD=$(jq -r '
-              (.[0:5] // []) |
-              map("- [`\(.id[0:7])`](\(.url)) \(.message | gsub("\r?\n$";""))") |
-              join("\n")
-            ' <<< "$COMMITS_JSON")
+          # Non-empty fallbacks
+          TITLE="Push to ${REF}"
+          URL="$COMPARE_URL"
+          DESCRIPTION="**${COUNT}** commit(s) pushed by **${ACTOR}**\n\n${COMMITS_MD}"
+          CONTENT="Push to ${REF} by ${ACTOR}"
+          COLOR=3066993
+          TS="${{ github.event.head_commit.timestamp || github.event.repository.pushed_at || github.run_started_at }}"
 
-            COUNT=$(jq 'length' <<< "$COMMITS_JSON")
-            TITLE="Push to ${REF}"
-            URL="$COMPARE_URL"
-            DESCRIPTION="**${COUNT}** commit(s) pushed by **${ACTOR}**\n\n${COMMITS_MD}"
-            COLOR=3066993
-            CONTENT=""
-
-          elif [ "$EVENT" = "pull_request" ]; then
-            MERGED=$(jq -r '.pull_request.merged' <<< '${{ toJson(github.event) }}')
-            if [ "$MERGED" = "true" ]; then
-              PR=$(jq -r '.pull_request.number' <<< '${{ toJson(github.event) }}')
-              PR_TITLE=$(jq -r '.pull_request.title' <<< '${{ toJson(github.event) }}')
-              BASE=$(jq -r '.pull_request.base.ref' <<< '${{ toJson(github.event) }}')
-              URL=$(jq -r '.pull_request.html_url' <<< '${{ toJson(github.event) }}')
-              TITLE="PR merged into ${BASE}"
-              DESCRIPTION="**#${PR} – ${PR_TITLE}**\nMerged by **${ACTOR}**"
-              COLOR=3447003
-              CONTENT=""
-            else
-              echo "skip=true" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-
-          elif [ "$EVENT" = "release" ]; then
-            TAG="${{ github.event.release.tag_name }}"
-            NAME="${{ github.event.release.name || github.event.release.tag_name }}"
-            BODY=$(jq -r '.release.body // ""' <<< '${{ toJson(github.event) }}')
-            URL="${{ github.event.release.html_url }}"
-            TITLE="Release published: ${NAME}"
-            DESCRIPTION="Tag: **${TAG}**\n\n${BODY}"
-            COLOR=15844367
-            CONTENT=""
+          # When GitHub can’t supply commits (edge/manual cases), still send something
+          if [ -z "$COMMITS_MD" ] || [ "$COMMITS_MD" = "null" ]; then
+            DESCRIPTION="Update on **${REPO}** by **${ACTOR}**"
           fi
 
-          # Output for next step (jq will do escaping)
           {
-            echo "title<<EOF"
-            echo "$TITLE"
-            echo "EOF"
-            echo "description<<EOF"
-            echo "$DESCRIPTION"
-            echo "EOF"
+            echo "title<<EOF";        echo "$TITLE";        echo "EOF"
+            echo "description<<EOF";  echo "$DESCRIPTION";  echo "EOF"
             echo "url=$URL"
             echo "color=$COLOR"
             echo "avatar=$AVATAR"
             echo "actor=$ACTOR"
-            echo "content<<EOF"
-            echo "$CONTENT"
-            echo "EOF"
+            echo "content<<EOF";      echo "$CONTENT";      echo "EOF"
+            echo "timestamp=$TS"
+            echo "repo=$REPO"
           } >> "$GITHUB_OUTPUT"
 
+      # ✅ Step 2 — SEND TO DISCORD
       - name: Send to Discord
-        if: steps.prep.outputs.skip != 'true'
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           TITLE: ${{ steps.prep.outputs.title }}
@@ -108,9 +71,13 @@ jobs:
           AVATAR: ${{ steps.prep.outputs.avatar }}
           ACTOR: ${{ steps.prep.outputs.actor }}
           CONTENT: ${{ steps.prep.outputs.content }}
-          REPO: ${{ github.repository }}
-          TS: ${{ github.event.head_commit.timestamp || github.event.release.published_at || github.event.pull_request.merged_at || github.event.pull_request.updated_at || github.event.repository.pushed_at }}
+          REPO: ${{ steps.prep.outputs.repo }}
+          TS: ${{ steps.prep.outputs.timestamp }}
         run: |
+          if [ -z "$WEBHOOK" ]; then
+            echo "::error::Missing secret DISCORD_WEBHOOK"; exit 1;
+          fi
+
           jq -n \
             --arg content "$CONTENT" \
             --arg title "$TITLE" \
@@ -122,7 +89,7 @@ jobs:
             --arg ts "$TS" \
             --argjson color "$COLOR" \
             '{
-              "content": ($content | select(length>0)),
+              "content": $content,                      # guaranteed non-empty
               "embeds": [{
                 "title": $title,
                 "description": $description,
@@ -131,8 +98,12 @@ jobs:
                 "author": { "name": $actor, "icon_url": $avatar },
                 "footer": { "text": $repo },
                 "timestamp": $ts
-              }]
+              }],
+              "allowed_mentions": { "parse": [] }
             }' > payload.json
+
+          # Optional: show payload (safe; no secrets)
+          echo "--- Discord payload ---"; cat payload.json; echo "---------------------"
 
           curl -sS -X POST -H "Content-Type: application/json" \
             -d @payload.json "$WEBHOOK" \
