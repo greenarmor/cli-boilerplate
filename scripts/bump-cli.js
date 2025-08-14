@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import inquirer from 'inquirer';
-import { execSync } from 'child_process';
+import { execSync, execFileSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -51,9 +51,9 @@ try {
 console.log(`\nGitHub Release Notes (generated):\n`);
 try {
   const changelogCli = path.resolve(__dirname, '../node_modules/conventional-changelog-cli/cli.js');
-  const flags = [`-p angular`, `-r ${releaseCount}`];
+  const flags = ['-p', 'angular', '-r', String(releaseCount)];
   if (unreleased) flags.push('-u');
-  const releaseNotes = execSync(`node ${changelogCli} ${flags.join(' ')}`, { encoding: 'utf8' });
+  const releaseNotes = execFileSync('node', [changelogCli, ...flags], { encoding: 'utf8' });
   console.log(releaseNotes || 'No generated release notes.');
 } catch (err) {
   console.warn('Failed to generate GitHub release notes.');
