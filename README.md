@@ -187,7 +187,7 @@ Always scan only systems you own or have explicit permission to test.
 ### Version Bump
 
 ```bash
-cli bump [-u] [-r <count>]
+cli bump [--github-release] [-u] [-r <count>]
 ```
 
 Supports:
@@ -196,16 +196,23 @@ Supports:
 - Git log + changelog preview
 - Optional GitHub push + npm publish
 - GitHub release notes preview (`-u` for Unreleased heading)
+- Optional GitHub release (`--github-release`, requires `GITHUB_TOKEN`)
 - `--dry-run` support
 
 ---
 
 ## GitHub Release Automation
 
-To create a release on GitHub:
+To create a release on GitHub as part of the bump workflow:
 
 ```bash
 export GITHUB_TOKEN=ghp_YourTokenHere
+cli bump --github-release
+```
+
+This flag runs `scripts/release-to-github.js` after pushing commits and tags. You can also run the script directly if needed:
+
+```bash
 node scripts/release-to-github.js
 ```
 

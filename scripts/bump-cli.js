@@ -12,6 +12,7 @@ const __dirname = path.dirname(__filename);
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
 const unreleased = args.includes('-u') || args.includes('--unreleased');
+const githubRelease = args.includes('--github-release');
 let releaseCount = 1;
 const rIndex = args.findIndex((a) => a === '-r' || a === '--release-count');
 if (rIndex !== -1) {
@@ -107,6 +108,10 @@ try {
   if (publishToNpm) {
     execSync('npm publish --access public', { stdio: 'inherit' });
     console.log('npm publish complete.');
+  }
+
+  if (githubRelease) {
+    execSync('node scripts/release-to-github.js', { stdio: 'inherit' });
   }
 
   console.log('\nVersion bump complete.');
