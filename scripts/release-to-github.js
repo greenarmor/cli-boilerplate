@@ -23,7 +23,7 @@ try {
 } catch {
   changelogCmd = 'npx conventional-changelog-cli';
 }
-const notes = execSync(`${changelogCmd} -p angular -u -r 1`, { encoding: 'utf8' });
+const notes = execSync(`${changelogCmd} -p angular -r 1`, { encoding: 'utf8' });
 
 const payload = {
   tag_name: tag,
