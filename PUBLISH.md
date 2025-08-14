@@ -1,16 +1,18 @@
 # 🚀 Publishing Guide for @greenarmor/cli-boilerplate
 
-This guide walks you through bumping versions, pushing tags, and automating releases using the `cli-bump` tool.
+This guide walks you through bumping versions, pushing tags, and automating releases using the `cli bump` tool.
 
 ---
 
-## 🧪 Simulation: `cli-bump`
+## 🧪 Simulation: `cli bump`
 
 When you run:
 
 ```bash
-cli-bump
+cli bump
 ```
+
+Add `-u` to preview notes as "Unreleased" or omit it for version headings. Pass `-r <count>` to control the release count (defaults to 1).
 
 You’ll see:
 
