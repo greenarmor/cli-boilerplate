@@ -1,6 +1,6 @@
 {
   "name": "@greenarmor/cli-boilerplate",
-  "version": "2.3.13",
+  "version": " 2.4.0",
   "description": "A powerful Node.js CLI boilerplate with semantic-release, commitlint, husky, GitHub Actions, and modular generators for components, pages, hooks, layouts, services, styles, and tests.",
   "type": "module",
   "repository": {
