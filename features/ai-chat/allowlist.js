@@ -11,5 +11,15 @@ export const ALLOWED = new Set([
   'generate:env',
   'generate:middleware',
   'generate:api',
-  'generate:config'
+  'generate:config',
+  // non-generator commands surfaced in chat mode
+  'scan',
+  'scan:init',
+  'patch',
+  'bump',
+  'changelog',
+  'completion',
+  'mcp:serve',
+  'rag:index',
+  'rag:query'
 ]);

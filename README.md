@@ -99,6 +99,22 @@ Requires `OPENAI_API_KEY` in your environment. Put the key in a `.env` or export
 
 `NODE_ENV=production` disables chat mode.
 
+Within chat mode you can type natural phrases and the CLI will map them to commands:
+
+```text
+AI> generate a component called Button
+AI> scan the project with the npm scanner
+AI> initialize the scanner config
+AI> list patches
+AI> apply patch readme-fix.patch
+AI> bump the version
+AI> generate the changelog
+AI> install shell completion
+AI> start the mcp server
+AI> index docs for rag
+AI> query rag for authentication
+```
+
 ### Generators
 
 ```bash
