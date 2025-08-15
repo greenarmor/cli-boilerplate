@@ -175,6 +175,12 @@ AI> index docs for rag
 AI> query rag for authentication
 ```
 
+Start the MCP server directly (development only):
+
+```bash
+NODE_ENV=development cli mcp:serve
+```
+
 ### Generators
 
 ```bash
