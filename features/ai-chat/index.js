@@ -38,6 +38,23 @@ export default function chat() {
 
       // 2) Naive intent map (keep or replace w/ your structured parser)
       const candidates = [
+        // scan commands
+        { rx: /scan[: ]?init/,                cmd: () => ['scan:init'] },
+        { rx: /scan(?:\s+(.*))?/,            cmd: (m) => ['scan', ...(m[1] ? m[1].trim().split(/\s+/) : [])] },
+
+        // patch management
+        { rx: /patch\s+apply\s+([\w.-]+\.patch)/, cmd: (m) => ['patch', 'apply', m[1]] },
+        { rx: /patch\s+list/,               cmd: ()  => ['patch', 'list'] },
+        { rx: /patch\s+clean/,              cmd: ()  => ['patch', 'clean'] },
+
+        // other root commands
+        { rx: /bump/,                       cmd: ()  => ['bump'] },
+        { rx: /changelog/,                  cmd: ()  => ['changelog'] },
+        { rx: /completion(?:\s+(uninstall|manual))?/, cmd: (m) => ['completion', ...(m[1] ? [m[1]] : [])] },
+        { rx: /mcp.*serve/,                 cmd: ()  => ['mcp:serve'] },
+        { rx: /rag[: ]?index(?:\s+(.*))?/,  cmd: (m) => ['rag:index', ...(m[1] ? m[1].trim().split(/\s+/) : [])] },
+        { rx: /rag[: ]?query(?:\s+(.*))?/,  cmd: (m) => ['rag:query', ...(m[1] ? m[1].trim().split(/\s+/) : [])] },
+
         { rx: /generate.*context.*\b(\w+)/, cmd: (m) => ['generate:context', m[1]] },
         { rx: /generate.*store.*\b(\w+)/,   cmd: (m) => ['generate:store', m[1]] },
         { rx: /env/,                        cmd: ()  => ['generate:env']        },
@@ -64,7 +81,7 @@ export default function chat() {
         return rl.prompt();
       }
 
-      const [cmdName, arg] = task;
+      const [cmdName, ...args] = task;
 
       // 3) Allowlist check
       if (!ALLOWED.has(cmdName)) {
@@ -72,13 +89,23 @@ export default function chat() {
         return rl.prompt();
       }
 
-      // 4) Write-safety check: if the arg would create files, ensure it's under ./src
-      // (Your generators already write under src/, so enforce that policy here as a rule of thumb.)
+      // 4) Safety checks
+      // Generators already write under src/, so ensure that directory exists
       const safeRoot = path.resolve(process.cwd(), 'src');
       if (!fs.existsSync(safeRoot)) fs.mkdirSync(safeRoot, { recursive: true });
 
+      // Patch apply: enforce file lives in patches/
+      if (cmdName === 'patch' && args[0] === 'apply') {
+        const patchesRoot = path.resolve(process.cwd(), 'patches');
+        const patchFile = path.resolve(patchesRoot, args[1] || '');
+        if (!patchFile.startsWith(patchesRoot) || !fs.existsSync(patchFile)) {
+          console.error('Patch file must exist inside patches/');
+          return rl.prompt();
+        }
+      }
+
       // 5) Execute
-      const full = arg ? `boiler-cli ${cmdName} ${arg}` : `boiler-cli ${cmdName}`;
+      const full = args.length ? `boiler-cli ${cmdName} ${args.join(' ')}` : `boiler-cli ${cmdName}`;
       console.log('[Running]:', full);
       const out = execSync(full).toString();
       console.log(out);
