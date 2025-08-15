@@ -145,6 +145,12 @@ if (command === 'chat') {
   process.exit(0);
 }
 
+// Dev-only MCP server command (lazy-loaded)
+if (command === 'mcp:serve') {
+  const { default: serve } = await import('../features/mcp/index.js');
+  await serve();
+}
+
 // ── Modular Generate Command Router ───────────────────────────────────────────
 if (command && command.startsWith('generate:')) {
   if (!subcommand) {
