@@ -127,6 +127,7 @@ NODE_ENV=development cli mcp:serve
 cli generate:component Button
 cli generate:hook useAuth
 cli generate:context Auth
+cli generate:authlogin auth
 ```
 
 Other supported generators:
@@ -137,6 +138,7 @@ Other supported generators:
 - `style` – add a stylesheet file
 - `test` – create a test file
 - `context` – create a context module
+- `authlogin` – scaffold auth server/client stubs and a `users` table schema
 
 Run `cli --help` to see available generator commands.
 
@@ -144,6 +146,16 @@ Use the `--ts` flag to scaffold TypeScript files instead of JavaScript:
 
 ```bash
 cli generate:component Button --ts
+```
+
+### Auth Login Schema
+
+`cli generate:authlogin` also writes an `auth/schema.sql` file containing a
+`users` table with `id`, `email`, `password_hash`, and `created_at` columns.
+Run your database migration tool or apply it directly, for example:
+
+```bash
+psql -f auth/schema.sql
 ```
 
 ### Security Scanning
