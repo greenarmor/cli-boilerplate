@@ -69,7 +69,7 @@ app.post('/login', loginLimiter, async (req: Request, res: Response): Promise<vo
   res.json({ token });
 });
 
-app.get('/me', authenticateToken, meLimiter, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+app.get('/me', meLimiter, authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const { rows } = await pool.query('SELECT id, email FROM users WHERE id = $1', [req.user!.id]);
   res.json(rows[0]);
 });
