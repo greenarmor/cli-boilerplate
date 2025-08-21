@@ -2,6 +2,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { Pool } from 'pg';
+import rateLimit from 'express-rate-limit';
 
 const pool = new Pool({
   // TODO: configure your database connection
@@ -11,6 +12,15 @@ const app = express();
 app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || 'change_this_secret';
+
+// Rate limiter for login endpoint: max 5 requests per minute per IP
+const loginLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 5,
+  message: { error: 'Too many login attempts, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 function generateToken(user) {
   return jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
@@ -28,7 +38,7 @@ function authenticateToken(req, res, next) {
   }
 }
 
-app.post('/login', async (req, res) => {
+app.post('/login', loginLimiter, async (req, res) => {
   const { email, password } = req.body;
   const { rows } = await pool.query('SELECT id, email, password_hash FROM users WHERE email = $1', [email]);
   const user = rows[0];
