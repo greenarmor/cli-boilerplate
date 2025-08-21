@@ -19,6 +19,15 @@ const loginLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+// Rate limiter for /me endpoint: max 60 requests per minute per IP
+const meLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 60,
+  message: { error: 'Too many requests to /me, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 const JWT_SECRET = process.env.JWT_SECRET || 'change_this_secret';
 
 interface UserPayload {
@@ -59,7 +68,7 @@ app.post('/login', loginLimiter, async (req: Request, res: Response): Promise<vo
   res.json({ token });
 });
 
-app.get('/me', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+app.get('/me', authenticateToken, meLimiter, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const { rows } = await pool.query('SELECT id, email FROM users WHERE id = $1', [req.user!.id]);
   res.json(rows[0]);
 });
