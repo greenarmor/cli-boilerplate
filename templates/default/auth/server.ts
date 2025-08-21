@@ -22,6 +22,15 @@ const loginLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+// Rate limiter for /me endpoint: max 30 requests per 15 minutes per IP
+const meLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 30,
+  message: { error: 'Too many requests, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 interface UserPayload {
   id: number;
   email: string;
@@ -60,7 +69,7 @@ app.post('/login', loginLimiter, async (req: Request, res: Response): Promise<vo
   res.json({ token });
 });
 
-app.get('/me', authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+app.get('/me', authenticateToken, meLimiter, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const { rows } = await pool.query('SELECT id, email FROM users WHERE id = $1', [req.user!.id]);
   res.json(rows[0]);
 });
