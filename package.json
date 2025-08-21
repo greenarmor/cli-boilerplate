@@ -26,7 +26,8 @@
     "conventional-changelog-angular": "^8.0.0",
     "conventional-changelog-cli": "^5.0.0",
     "dotenv": "^16.4.5",
-    "inquirer": "^12.9.0"
+    "inquirer": "^12.9.0",
+    "express-rate-limit": "^8.0.1"
   },
   "author": "Green <greenarmor@live.com>",
   "license": "MIT",
