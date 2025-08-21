@@ -23,6 +23,7 @@ const generateRoutes = {
   'generate:style': 'generate-style.js',
   'generate:test': 'generate-test.js',
   'generate:context': 'generate-context.js',
+  'generate:authlogin': 'generate-authlogin.js',
 };
 
 // Load plugins and merge provided commands

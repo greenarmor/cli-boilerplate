@@ -127,6 +127,7 @@ NODE_ENV=development cli mcp:serve
 cli generate:component Button
 cli generate:hook useAuth
 cli generate:context Auth
+cli generate:authlogin auth
 ```
 
 Other supported generators:
@@ -137,6 +138,7 @@ Other supported generators:
 - `style` – add a stylesheet file
 - `test` – create a test file
 - `context` – create a context module
+- `authlogin` – scaffold a JWT auth server, client helpers, and a `users` table schema
 
 Run `cli --help` to see available generator commands.
 
@@ -144,6 +146,37 @@ Use the `--ts` flag to scaffold TypeScript files instead of JavaScript:
 
 ```bash
 cli generate:component Button --ts
+```
+
+### Auth Login Generator
+
+`cli generate:authlogin` creates a JWT-ready authentication system:
+
+```
+auth/
+  client.js   # login helpers and token storage
+  server.js   # Express server with JWT + bcrypt
+  schema.sql  # PostgreSQL users table
+```
+
+Install runtime dependencies before running the server:
+
+```bash
+npm install express jsonwebtoken bcrypt pg
+```
+
+Configure your database connection and set `JWT_SECRET`, then start the server:
+
+```bash
+node auth/server.js
+```
+
+Log in with a `POST /login` containing `email` and `password` to receive a JWT
+token. The token can be used via the `Authorization` header or the generated
+client helper's `fetchWithAuth`. Apply the database schema with:
+
+```bash
+psql -f auth/schema.sql
 ```
 
 ### Security Scanning
