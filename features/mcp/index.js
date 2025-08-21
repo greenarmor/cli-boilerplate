@@ -1,4 +1,5 @@
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { z } from 'zod';
@@ -9,6 +10,10 @@ import { fileURLToPath } from 'url';
 export default async function serve() {
   const app = express();
   app.use(express.json());
+
+  const windowMs = Number(process.env.MCP_RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000;
+  const max = Number(process.env.MCP_RATE_LIMIT_MAX) || 100;
+  const limiter = rateLimit({ windowMs, max });
 
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
@@ -38,7 +43,7 @@ export default async function serve() {
     }
   );
 
-  app.post('/mcp', async (req, res) => {
+  app.post('/mcp', limiter, async (req, res) => {
     const transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: undefined,
     });
