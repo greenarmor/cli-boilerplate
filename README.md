@@ -138,7 +138,7 @@ Other supported generators:
 - `style` – add a stylesheet file
 - `test` – create a test file
 - `context` – create a context module
-- `authlogin` – scaffold auth server/client stubs and a `users` table schema
+- `authlogin` – scaffold a JWT auth server, client helpers, and a `users` table schema
 
 Run `cli --help` to see available generator commands.
 
@@ -148,11 +148,32 @@ Use the `--ts` flag to scaffold TypeScript files instead of JavaScript:
 cli generate:component Button --ts
 ```
 
-### Auth Login Schema
+### Auth Login Generator
 
-`cli generate:authlogin` also writes an `auth/schema.sql` file containing a
-`users` table with `id`, `email`, `password_hash`, and `created_at` columns.
-Run your database migration tool or apply it directly, for example:
+`cli generate:authlogin` creates a JWT-ready authentication system:
+
+```
+auth/
+  client.js   # login helpers and token storage
+  server.js   # Express server with JWT + bcrypt
+  schema.sql  # PostgreSQL users table
+```
+
+Install runtime dependencies before running the server:
+
+```bash
+npm install express jsonwebtoken bcrypt pg
+```
+
+Configure your database connection and set `JWT_SECRET`, then start the server:
+
+```bash
+node auth/server.js
+```
+
+Log in with a `POST /login` containing `email` and `password` to receive a JWT
+token. The token can be used via the `Authorization` header or the generated
+client helper's `fetchWithAuth`. Apply the database schema with:
 
 ```bash
 psql -f auth/schema.sql
