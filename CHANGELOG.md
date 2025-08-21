@@ -1,3 +1,47 @@
+# [2.5.0](https://github.com/greenarmor/cli-boilerplate/compare/v2.4.1...v2.5.0) (2025-08-21)
+
+
+
+## [2.4.1](https://github.com/greenarmor/cli-boilerplate/compare/v2.3.15...v2.4.1) (2025-08-15)
+
+
+
+## [2.3.15](https://github.com/greenarmor/cli-boilerplate/compare/v2.3.14...v2.3.15) (2025-08-15)
+
+
+
+## [2.3.14](https://github.com/greenarmor/cli-boilerplate/compare/v2.3.13...v2.3.14) (2025-08-15)
+
+
+
+## [2.3.13](https://github.com/greenarmor/cli-boilerplate/compare/v2.3.12...v2.3.13) (2025-08-14)
+
+
+
+## [2.3.12](https://github.com/greenarmor/cli-boilerplate/compare/v2.3.11...v2.3.12) (2025-08-14)
+
+
+
+## [2.3.11](https://github.com/greenarmor/cli-boilerplate/compare/v2.3.10...v2.3.11) (2025-08-14)
+
+
+
+## [2.3.10](https://github.com/greenarmor/cli-boilerplate/compare/v2.3.9...v2.3.10) (2025-08-14)
+
+
+
+## [2.3.9](https://github.com/greenarmor/cli-boilerplate/compare/v2.3.8...v2.3.9) (2025-08-13)
+
+
+
+## [2.3.8](https://github.com/greenarmor/cli-boilerplate/compare/v2.3.7...v2.3.8) (2025-08-13)
+
+
+
+## [2.3.7](https://github.com/greenarmor/cli-boilerplate/compare/v2.3.6...v2.3.7) (2025-08-13)
+
+
+
 ## [2.3.6](https://github.com/greenarmor/cli-boilerplate/compare/v2.3.5...v2.3.6) (2025-08-13)
 
 
