@@ -21,10 +21,15 @@ export default function generateAuthLogin(name, framework, useTs = false) {
     fs.mkdirSync(authDir, { recursive: true });
   }
 
-  const files = ['server.js', 'client.js', 'schema.sql'];
+  const ext = useTs ? 'ts' : 'js';
+  const files = [`server.${ext}`, `client.${ext}`, 'schema.sql'];
 
   for (const file of files) {
-    const content = loadTemplate(framework, file);
+    let content = loadTemplate(framework, file);
+    if (!content && ext === 'ts') {
+      const fallback = file.replace('.ts', '.js');
+      content = loadTemplate(framework, fallback);
+    }
     if (content) {
       fs.writeFileSync(path.join(authDir, file), content);
     }
