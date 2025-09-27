@@ -26,8 +26,8 @@
     "conventional-changelog-angular": "^8.0.0",
     "conventional-changelog-cli": "^5.0.0",
     "dotenv": "^16.4.5",
-    "inquirer": "^12.9.0",
-    "express-rate-limit": "^8.0.1"
+    "express-rate-limit": "^8.0.1",
+    "inquirer": "^12.9.0"
   },
   "author": "Green <greenarmor@live.com>",
   "license": "MIT",
@@ -87,6 +87,10 @@
     "target": "."
   },
   "devDependencies": {
+    "conventional-changelog": "^7.1.1",
     "jest": "^29.7.0"
+  },
+  "overrides": {
+    "@conventional-changelog/git-client": "^2.5.1"
   }
 }
